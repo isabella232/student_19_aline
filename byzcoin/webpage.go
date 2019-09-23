@@ -2,8 +2,8 @@ package byzcoin
 
 import (
 	//"errors"
-	"net/http"
-	"golang.org/x/net/html"
+	//"net/http"
+	//"golang.org/x/net/html"
 
 	"go.dedis.ch/cothority/v3/byzcoin"
 	"go.dedis.ch/cothority/v3/darc"
@@ -21,10 +21,16 @@ type contractWebPage struct {
 
 func contractValueFromBytes(in []byte) (byzcoin.Contract, error) {
 	cv := &contractWebPage{}
-	err := protobuf.Decode(in, &cv.URLWebPage)
-	if err != nil {
-		return nil, err
+	errURL := protobuf.Decode(in, &cv.URLWebPage)
+	if errURL  != nil {
+		return nil, errURL
 	}
+
+	errC := protobuf.Decode(in, &cv.content)
+	if errC != nil {
+		return nil, errC
+	}
+
 	return cv, nil
 }
 
