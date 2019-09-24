@@ -4,6 +4,7 @@ import (
 	//"errors"
 	//"net/http"
 	//"golang.org/x/net/html"
+	//"fmt"
 
 	"go.dedis.ch/cothority/v3/byzcoin"
 	"go.dedis.ch/cothority/v3/darc"
@@ -14,23 +15,15 @@ var ContractWebPageID = "webPage"
 
 type contractWebPage struct {
 	byzcoin.BasicContract
-	URLWebPage []byte
-	content []byte
-
+	KeyValueData
 }
 
-func contractValueFromBytes(in []byte) (byzcoin.Contract, error) {
+func contractDataFromBytes(in []byte) (byzcoin.Contract, error) {
 	cv := &contractWebPage{}
-	errURL := protobuf.Decode(in, &cv.URLWebPage)
-	if errURL  != nil {
-		return nil, errURL
+	err := protobuf.Decode(in, &cv.KeyValueData)
+	if err != nil {
+		return nil, err
 	}
-
-	errC := protobuf.Decode(in, &cv.content)
-	if errC != nil {
-		return nil, errC
-	}
-
 	return cv, nil
 }
 
@@ -45,22 +38,22 @@ func (c *contractWebPage) Spawn(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Inst
 	}
 
 	// Put the stuff from the inst.Spawn.Args into our KeyValueData structure.
-	/*cs := &c.URLWebPage
+	cs := &c.KeyValueData
 	for _, kv := range inst.Spawn.Args {
-		cs.Storage = append(cs.Storage, KeyValue{kv.Name, kv.Value})
+		cs.Storage = append(cs.Storage, KeyValue{"URLWebPage", kv.Value})
 	}
 
-	csBuf, err := protobuf.Encode(&c.URLWebPage)
+	csBuf, err := protobuf.Encode(&c.KeyValueData)
 	if err != nil {
 		return
-	}*/
+	}
 
 	// Then create a StateChange request with the data of the instance. The
 	// InstanceID is given by the DeriveID method of the instruction that allows
 	// to create multiple instanceIDs out of a given instruction in a pseudo-
 	// random way that will be the same for all nodes.
 	sc = []byzcoin.StateChange{
-		byzcoin.NewStateChange(byzcoin.Create, inst.DeriveID(""), ContractWebPageID, inst.Spawn.Args.Search("URLWebPage"), darcID),
+		byzcoin.NewStateChange(byzcoin.Create, inst.DeriveID(""), ContractWebPageID, csBuf, darcID),
 	}
 	return
 }
