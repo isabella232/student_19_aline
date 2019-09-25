@@ -15,12 +15,12 @@ var ContractWebPageID = "webPage"
 
 type contractWebPage struct {
 	byzcoin.BasicContract
-	KeyValueData
+	ContractWebPageData
 }
 
 func contractDataFromBytes(in []byte) (byzcoin.Contract, error) {
 	cv := &contractWebPage{}
-	err := protobuf.Decode(in, &cv.KeyValueData)
+	err := protobuf.Decode(in, &cv.ContractWebPageData)
 	if err != nil {
 		return nil, err
 	}
@@ -38,12 +38,12 @@ func (c *contractWebPage) Spawn(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Inst
 	}
 
 	// Put the stuff from the inst.Spawn.Args into our KeyValueData structure.
-	cs := &c.KeyValueData
+	cs := &c.ContractWebPageData
 	for _, kv := range inst.Spawn.Args {
 		cs.Storage = append(cs.Storage, KeyValue{"URLWebPage", kv.Value})
 	}
 
-	csBuf, err := protobuf.Encode(&c.KeyValueData)
+	csBuf, err := protobuf.Encode(&c.ContractWebPageData)
 	if err != nil {
 		return
 	}
