@@ -15,6 +15,6 @@ type KeyValue struct {
 }
 
 // KeyValueData is the structure that will hold all key/value pairs.
-type KeyValueData struct {
+type ContractWebPageData struct {
 	Storage []KeyValue
 }
