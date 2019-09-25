@@ -36,11 +36,11 @@ func TestValue_Spawn(t *testing.T) {
 			Args: []byzcoin.Argument{{
 				Name:  "URLWebPage",
 				Value: myURL,
-			}},
+			},
 			{
 				Name:  "content",
 				Value: myURL,
-			}}
+			}},
 		},
 		SignerCounter: []uint64{1},
 	})
