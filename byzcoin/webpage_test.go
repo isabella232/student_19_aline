@@ -3,8 +3,8 @@ package byzcoin
 import (
 	"testing"
 	"time"
-	//"io/ioutil"
-	//"net/http"
+	"io/ioutil"
+	"net/http"
 
 	"github.com/stretchr/testify/require"
 	"go.dedis.ch/cothority/v3"
@@ -32,8 +32,8 @@ func TestValue_Spawn(t *testing.T) {
 	require.Nil(t, err)
 
 	URLArg := []byte("http://www.mlppreservationproject.com/")
-//	resp, _ := http.Get(string(URLArg))
-	//content, _ := ioutil.ReadAll(resp.Body)
+	resp, _ := http.Get(string(URLArg))
+	content, _ := ioutil.ReadAll(resp.Body)
 
 	ctx, err := cl.CreateTransaction(byzcoin.Instruction{
 		InstanceID: byzcoin.NewInstanceID(gDarc.GetBaseID()),
@@ -74,15 +74,15 @@ func TestValue_Spawn(t *testing.T) {
 
 	// Now let's check the content of our struct
 	// result.Storage should contain two KeyValue elements
-	require.Equal(t, 1, len(result.Storage))
+	require.Equal(t, 2, len(result.Storage))
 
 	// Checks the first key value
 	require.Equal(t, "URLWebPage", result.Storage[0].Key)
 	require.Equal(t, URLArg, result.Storage[0].Value)
 
 	// Checks the second key value
-	//require.Equal(t, "content", result.Storage[1].Key)
-	//require.Equal(t, content, result.Storage[1].Value)
+	require.Equal(t, "content", result.Storage[1].Key)
+	require.Equal(t, content, result.Storage[1].Value)
 
 	local.WaitDone(genesisMsg.BlockInterval)
 
