@@ -2,10 +2,10 @@ package byzcoin
 
 import (
 	//"errors"
-	"net/http"
+	//"net/http"
 	//"golang.org/x/net/html"
 	//"fmt"
-	"io/ioutil"
+	//"io/ioutil"
 
 	"go.dedis.ch/cothority/v3/byzcoin"
 	"go.dedis.ch/cothority/v3/darc"
@@ -44,10 +44,10 @@ func (c *contractWebPage) Spawn(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Inst
 	cs.Storage = append(cs.Storage, KeyValue{"URLWebPage", URLArg})
 
 	//Extract content of the page
-	resp, _ := http.Get(string(URLArg))
+	/*resp, _ := http.Get(string(URLArg))
 	content, _ := ioutil.ReadAll(resp.Body)
 
-	cs.Storage = append(cs.Storage, KeyValue{"content", content})
+	cs.Storage = append(cs.Storage, KeyValue{"content", content})*/
 
 
  	//Put the data into our KeyValueData structure.
