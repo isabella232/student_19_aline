@@ -2,9 +2,10 @@ package byzcoin
 
 import (
 	//"errors"
-	//"net/http"
+	"net/http"
 	//"golang.org/x/net/html"
 	//"fmt"
+	"io/ioutil"
 
 	"go.dedis.ch/cothority/v3/byzcoin"
 	"go.dedis.ch/cothority/v3/darc"
@@ -37,12 +38,19 @@ func (c *contractWebPage) Spawn(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Inst
 		return
 	}
 
-	// Put the stuff from the inst.Spawn.Args into our KeyValueData structure.
+	// Extract the URL from inst.Spawn.Args
+	URLArg :=  inst.Spawn.Args.Search("URLWebPage")
 	cs := &c.ContractWebPageData
-	for _, kv := range inst.Spawn.Args {
-		cs.Storage = append(cs.Storage, KeyValue{"URLWebPage", kv.Value})
-	}
+	cs.Storage = append(cs.Storage, KeyValue{"URLWebPage", URLArg})
 
+	//Extract content of the page
+	resp, _ := http.Get(string(URLArg))
+	content, _ := ioutil.ReadAll(resp.Body)
+
+	cs.Storage = append(cs.Storage, KeyValue{"content", content})
+
+
+ 	//Put the data into our KeyValueData structure.
 	csBuf, err := protobuf.Encode(&c.ContractWebPageData)
 	if err != nil {
 		return
