@@ -3,8 +3,9 @@ package byzcoin
 import (
 	"testing"
 	"time"
-	"io/ioutil"
+	//"io/ioutil"
 	"net/http"
+	"golang.org/x/crypto/blake2b"
 
 	"github.com/stretchr/testify/require"
 	"go.dedis.ch/cothority/v3"
@@ -31,9 +32,17 @@ func TestValue_Spawn(t *testing.T) {
 	cl, _, err := byzcoin.NewLedger(genesisMsg, false)
 	require.Nil(t, err)
 
+	// Get the URL
 	URLArg := []byte("http://www.mlppreservationproject.com/")
+
+	// Get the content
 	resp, _ := http.Get(string(URLArg))
-	content, _ := ioutil.ReadAll(resp.Body)
+	content  :=[]byte("jesouhaiteavoirunestringassezlonguepourmoisimafonctionhashenfincelledupackagegolangtientlaroute")
+	hashedContent:= blake2b.Sum256(content)
+	resp.Body.Close()
+
+	// Get the current date
+	formattedDate := []byte(time.Now().Format("01-02-2006"))
 
 	ctx, err := cl.CreateTransaction(byzcoin.Instruction{
 		InstanceID: byzcoin.NewInstanceID(gDarc.GetBaseID()),
@@ -54,35 +63,38 @@ func TestValue_Spawn(t *testing.T) {
 
 	local.WaitDone(genesisMsg.BlockInterval)
 
-	// Polls the blockchain to get a proof for our new instance
+	// Poll the blockchain to get a proof for our new instance
 	pr, err := cl.WaitProof(byzcoin.NewInstanceID(ctx.Instructions[0].DeriveID("").Slice()), 2*genesisMsg.BlockInterval, nil)
 	require.Nil(t, err)
 
-	// Checks the proof to ensure the instance is created
+	// Check the proof to ensure the instance is created
 	require.True(t, pr.InclusionProof.Match(ctx.Instructions[0].DeriveID("").Slice()))
 
-	// Gets the encoded content of the contract in the form of a byte slice
+	// Get the encoded content of the contract in the form of a byte slice
 	resultBuf, _, _, err := pr.Get(ctx.Instructions[0].DeriveID("").Slice())
 	require.Nil(t, err)
 
-	// Initializes en empty struct so the resultBuf can be decoded into it
+	// Initialize en empty struct so the resultBuf can be decoded into it
 	result := ContractWebPageData{}
 
-	// Deserializes the byte slice we received into our empty struct
+	// Deserialize the byte slice we received into our empty struct
 	err = protobuf.Decode(resultBuf, &result)
 	require.Nil(t, err)
 
-	// Now let's check the content of our struct
-	// result.Storage should contain two KeyValue elements
-	require.Equal(t, 2, len(result.Storage))
+	// Check if our struct result.Storage contains the correct number of elements
+	require.Equal(t, 3, len(result.Storage))
 
-	// Checks the first key value
+	// Check the 1st key value
 	require.Equal(t, "URLWebPage", result.Storage[0].Key)
 	require.Equal(t, URLArg, result.Storage[0].Value)
 
-	// Checks the second key value
+	// Check the 2nd key value
 	require.Equal(t, "content", result.Storage[1].Key)
-	require.Equal(t, content, result.Storage[1].Value)
+	require.Equal(t, hashedContent[:], result.Storage[1].Value)
+
+	// Check the 3rd key value
+	require.Equal(t, "date", result.Storage[2].Key)
+	require.Equal(t, formattedDate, result.Storage[2].Value)
 
 	local.WaitDone(genesisMsg.BlockInterval)
 
