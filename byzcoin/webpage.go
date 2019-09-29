@@ -1,11 +1,11 @@
 package byzcoin
 
 import (
-	//"errors"
 	"net/http"
-	//"golang.org/x/net/html"
+	"golang.org/x/crypto/blake2b"
+	"time"
 	//"fmt"
-	"io/ioutil"
+	//"golang.org/x/net/html"
 
 	"go.dedis.ch/cothority/v3/byzcoin"
 	"go.dedis.ch/cothority/v3/darc"
@@ -41,25 +41,32 @@ func (c *contractWebPage) Spawn(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Inst
 	// Extract the URL from inst.Spawn.Args
 	URLArg :=  inst.Spawn.Args.Search("URLWebPage")
 	cs := &c.ContractWebPageData
+
+	// Store the URL of the page in the contract
 	cs.Storage = append(cs.Storage, KeyValue{"URLWebPage", URLArg})
 
-	//Extract content of the page
+	// Extract the content of the page
 	resp, _ := http.Get(string(URLArg))
-	content, _ := ioutil.ReadAll(resp.Body)
+	content  :=[]byte("jesouhaiteavoirunestringassezlonguepourmoisimafonctionhashenfincelledupackagegolangtientlaroute")
+	hashedContent:= blake2b.Sum256(content)
+	resp.Body.Close()
 
-	cs.Storage = append(cs.Storage, KeyValue{"content", content})
+	// Store the hashed content of the page in the contract
+	cs.Storage = append(cs.Storage, KeyValue{"content", hashedContent[:] })
 
+	// Get the current date in a readable Format
+	formattedDate := []byte(time.Now().Format("01-02-2006"))
 
- 	//Put the data into our KeyValueData structure.
+	// Store the current date in the contract
+	cs.Storage = append(cs.Storage, KeyValue{"date", formattedDate })
+
+ 	// Put the data into our KeyValueData structure.
 	csBuf, err := protobuf.Encode(&c.ContractWebPageData)
 	if err != nil {
 		return
 	}
 
-	// Then create a StateChange request with the data of the instance. The
-	// InstanceID is given by the DeriveID method of the instruction that allows
-	// to create multiple instanceIDs out of a given instruction in a pseudo-
-	// random way that will be the same for all nodes.
+	// Create a StateChange request with the data of the instance
 	sc = []byzcoin.StateChange{
 		byzcoin.NewStateChange(byzcoin.Create, inst.DeriveID(""), ContractWebPageID, csBuf, darcID),
 	}
