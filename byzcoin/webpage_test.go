@@ -3,9 +3,10 @@ package byzcoin
 import (
 	"testing"
 	"time"
-	//"io/ioutil"
 	"net/http"
+	"io/ioutil"
 	"golang.org/x/crypto/blake2b"
+	//"golang.org/x/net/html"
 
 	"github.com/stretchr/testify/require"
 	"go.dedis.ch/cothority/v3"
@@ -36,10 +37,16 @@ func TestValue_Spawn(t *testing.T) {
 	URLArg := []byte("http://www.mlppreservationproject.com/")
 
 	// Get the content
-	resp, _ := http.Get(string(URLArg))
-	content  :=[]byte("jesouhaiteavoirunestringassezlonguepourmoisimafonctionhashenfincelledupackagegolangtientlaroute")
+	var transport http.RoundTripper = &http.Transport{
+        DisableKeepAlives: true, // to avoid Goroutine leakages
+    }
+
+	client := &http.Client{Transport: transport}
+	resp, _ := client.Get(string(URLArg))
+  content, _:= ioutil.ReadAll(resp.Body)
+
+	// Hash this content
 	hashedContent:= blake2b.Sum256(content)
-	resp.Body.Close()
 
 	// Get the current date
 	formattedDate := []byte(time.Now().Format("01-02-2006"))
