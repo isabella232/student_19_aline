@@ -132,4 +132,6 @@ func (c *contractWebPage) Delete(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Ins
 	}
 	return
 }
+
+//UPDATE:NOT RELEVANT
 */
