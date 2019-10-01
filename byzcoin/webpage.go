@@ -101,37 +101,3 @@ func (c *contractWebPage) Delete(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Ins
 	sc = byzcoin.StateChanges{byzcoin.NewStateChange(byzcoin.Remove, inst.InstanceID, ContractWebPageID, nil, darcID)}
 	return
 }
-
-/*func (c *contractWebPage) Invoke(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Instruction, coins []byzcoin.Coin) (sc []byzcoin.StateChange, cout []byzcoin.Coin, err error) {
-	cout = coins
-	var darcID darc.ID
-	_, _, _, darcID, err = rst.GetValues(inst.InstanceID.Slice())
-	if err != nil {
-		return
-	}
-
-	if inst.Invoke.Command != "update" {
-		return nil, nil, errors.New("Value contract can only update")
-	}
-	// The only command we can invoke is 'update' which will store the new values
-	// given in the arguments in the data.
-	//  1. decode the existing data
-	//  2. update the data
-	//  3. encode the data into protobuf again
-
-	kvd := &c.URLWebPage
-	kvd.Update(inst.Invoke.Args)
-	var buf []byte
-	buf, err = protobuf.Encode(kvd)
-	if err != nil {
-		return
-	}
-	sc = []byzcoin.StateChange{
-		byzcoin.NewStateChange(byzcoin.Update, inst.InstanceID,
-			ContractWebPageID, buf, darcID),
-	}
-	return
-}
-
-//UPDATE:NOT RELEVANT
-*/
