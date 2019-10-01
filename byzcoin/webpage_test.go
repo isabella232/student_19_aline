@@ -1,11 +1,11 @@
 package byzcoin
 
 import (
+	"golang.org/x/crypto/blake2b"
+	"io/ioutil"
+	"net/http"
 	"testing"
 	"time"
-	"net/http"
-	"io/ioutil"
-	"golang.org/x/crypto/blake2b"
 	//"golang.org/x/net/html"
 
 	"github.com/stretchr/testify/require"
@@ -38,15 +38,15 @@ func TestValue_Spawn(t *testing.T) {
 
 	// Get the content
 	var transport http.RoundTripper = &http.Transport{
-        DisableKeepAlives: true, // to avoid Goroutine leakages
-    }
+		DisableKeepAlives: true, // to avoid Goroutine leakages
+	}
 
 	client := &http.Client{Transport: transport}
 	resp, _ := client.Get(string(URLArg))
-  content, _:= ioutil.ReadAll(resp.Body)
+	content, _ := ioutil.ReadAll(resp.Body)
 
 	// Hash this content
-	hashedContent:= blake2b.Sum256(content)
+	hashedContent := blake2b.Sum256(content)
 
 	// Get the current date
 	formattedDate := []byte(time.Now().Format("01-02-2006"))
