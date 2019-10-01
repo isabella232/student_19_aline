@@ -1,8 +1,8 @@
 package byzcoin
 
 import (
-	"net/http"
 	"golang.org/x/crypto/blake2b"
+	"net/http"
 	//"golang.org/x/net/html"
 	"time"
 	//"io"
@@ -12,12 +12,10 @@ import (
 	"go.dedis.ch/cothority/v3/byzcoin"
 	"go.dedis.ch/cothority/v3/darc"
 	"go.dedis.ch/protobuf"
-
 	//newstuff
 	//"bytes"
 	//"fmt"
 	//"io"
-
 	//"github.com/antchfx/xpath"
 	//"golang.org/x/net/html/charset"
 )
@@ -49,7 +47,7 @@ func (c *contractWebPage) Spawn(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Inst
 	}
 
 	// Extract the URL from inst.Spawn.Args
-	URLArg :=  inst.Spawn.Args.Search("URLWebPage")
+	URLArg := inst.Spawn.Args.Search("URLWebPage")
 	cs := &c.ContractWebPageData
 
 	// Store the URL of the page in the contract
@@ -57,26 +55,26 @@ func (c *contractWebPage) Spawn(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Inst
 
 	// Extract the content of the page
 	var transport http.RoundTripper = &http.Transport{
-        DisableKeepAlives: true, // to avoid Goroutine leakages
-    }
+		DisableKeepAlives: true, // to avoid Goroutine leakages
+	}
 
 	client := &http.Client{Transport: transport}
 	resp, _ := client.Get(string(URLArg))
-  content, _:= ioutil.ReadAll(resp.Body)
+	content, _ := ioutil.ReadAll(resp.Body)
 
 	// Hash this content
-	hashedContent:= blake2b.Sum256(content)
+	hashedContent := blake2b.Sum256(content)
 
 	// Store the hashed content of the page in the contract
-	cs.Storage = append(cs.Storage, KeyValue{"content", hashedContent[:] })
+	cs.Storage = append(cs.Storage, KeyValue{"content", hashedContent[:]})
 
 	// Get the current date in a readable Format
 	formattedDate := []byte(time.Now().Format("01-02-2006"))
 
 	// Store the current date in the contract
-	cs.Storage = append(cs.Storage, KeyValue{"date", formattedDate })
+	cs.Storage = append(cs.Storage, KeyValue{"date", formattedDate})
 
- 	// Put the data into our KeyValueData structure.
+	// Put the data into our KeyValueData structure.
 	csBuf, err := protobuf.Encode(&c.ContractWebPageData)
 	if err != nil {
 		return
