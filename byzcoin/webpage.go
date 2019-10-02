@@ -47,34 +47,27 @@ func (c *contractWebPage) Spawn(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Inst
 	}
 
 	// Extract the URL from inst.Spawn.Args
-	URLArg := inst.Spawn.Args.Search("URLWebPage")
+	URLArg := string(inst.Spawn.Args.Search("URLWebPage"))
 	cs := &c.ContractWebPageData
 
 	// Store the URL of the page in the contract
-	cs.Storage = append(cs.Storage, KeyValue{"URLWebPage", URLArg})
+	cs.URLWebPage = URLArg
 
 	// Extract the content of the page
 	var transport http.RoundTripper = &http.Transport{
-		DisableKeepAlives: true, // to avoid Goroutine leakages
+		DisableKeepAlives: true, // To avoid Goroutine leakages
 	}
 
 	client := &http.Client{Transport: transport}
-	resp, _ := client.Get(string(URLArg))
+	resp, _ := client.Get(URLArg)
 	content, _ := ioutil.ReadAll(resp.Body)
 
-	// Hash this content
-	hashedContent := blake2b.Sum256(content)
+	// Store the hashed content of the page, the date and the selector in the contract
+	cs.content = blake2b.Sum256(content)
+	cs.creationDate = time.Now().Format("01-02-2006")
+	cs.selector = "abcdefghijklmnop"
 
-	// Store the hashed content of the page in the contract
-	cs.Storage = append(cs.Storage, KeyValue{"content", hashedContent[:]})
-
-	// Get the current date in a readable Format
-	formattedDate := []byte(time.Now().Format("01-02-2006"))
-
-	// Store the current date in the contract
-	cs.Storage = append(cs.Storage, KeyValue{"date", formattedDate})
-
-	// Put the data into our KeyValueData structure.
+	// Put the data into our data structure.
 	csBuf, err := protobuf.Encode(&c.ContractWebPageData)
 	if err != nil {
 		return

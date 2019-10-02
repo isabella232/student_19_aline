@@ -34,7 +34,7 @@ func TestValue_Spawn(t *testing.T) {
 	require.Nil(t, err)
 
 	// Get the URL
-	URLArg := []byte("http://www.mlppreservationproject.com/")
+	URLArg := "http://www.mlppreservationproject.com/"
 
 	// Get the content
 	var transport http.RoundTripper = &http.Transport{
@@ -45,19 +45,13 @@ func TestValue_Spawn(t *testing.T) {
 	resp, _ := client.Get(string(URLArg))
 	content, _ := ioutil.ReadAll(resp.Body)
 
-	// Hash this content
-	hashedContent := blake2b.Sum256(content)
-
-	// Get the current date
-	formattedDate := []byte(time.Now().Format("01-02-2006"))
-
 	ctx, err := cl.CreateTransaction(byzcoin.Instruction{
 		InstanceID: byzcoin.NewInstanceID(gDarc.GetBaseID()),
 		Spawn: &byzcoin.Spawn{
 			ContractID: ContractWebPageID,
 			Args: []byzcoin.Argument{{
 				Name:  "URLWebPage",
-				Value: URLArg,
+				Value: []byte(URLArg),
 			}},
 		},
 		SignerCounter: []uint64{1},
@@ -88,20 +82,11 @@ func TestValue_Spawn(t *testing.T) {
 	err = protobuf.Decode(resultBuf, &result)
 	require.Nil(t, err)
 
-	// Check if our struct result.Storage contains the correct number of elements
-	require.Equal(t, 3, len(result.Storage))
-
-	// Check the 1st key value
-	require.Equal(t, "URLWebPage", result.Storage[0].Key)
-	require.Equal(t, URLArg, result.Storage[0].Value)
-
-	// Check the 2nd key value
-	require.Equal(t, "content", result.Storage[1].Key)
-	require.Equal(t, hashedContent[:], result.Storage[1].Value)
-
-	// Check the 3rd key value
-	require.Equal(t, "date", result.Storage[2].Key)
-	require.Equal(t, formattedDate, result.Storage[2].Value)
+	// Check the values of each field
+	require.Equal(t, URLArg, result.URLWebPage)
+	require.Equal(t, blake2b.Sum256(content), result.content)
+	require.Equal(t, "abcdefghijklmnop", result.selector)
+	require.Equal(t, time.Now().Format("01-02-2006"), result.creationDate)
 
 	local.WaitDone(genesisMsg.BlockInterval)
 
