@@ -63,11 +63,11 @@ func (c *contractWebPage) Spawn(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Inst
 	content, _ := ioutil.ReadAll(resp.Body)
 
 	// Store the hashed content of the page, the date and the selector in the contract
-	cs.content = blake2b.Sum256(content)
-	cs.creationDate = time.Now().Format("01-02-2006")
-	cs.selector = "abcdefghijklmnop"
+	cs.Content = blake2b.Sum256(content)
+	cs.CreationDate = time.Now().Format("01-02-2006")
+	cs.Selector = "abcdefghijklmnop"
 
-	// Put the data into our data structure.
+	// Put the data into our struct
 	csBuf, err := protobuf.Encode(&c.ContractWebPageData)
 	if err != nil {
 		return

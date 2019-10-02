@@ -84,9 +84,9 @@ func TestValue_Spawn(t *testing.T) {
 
 	// Check the values of each field
 	require.Equal(t, URLArg, result.URLWebPage)
-	require.Equal(t, blake2b.Sum256(content), result.content)
-	require.Equal(t, "abcdefghijklmnop", result.selector)
-	require.Equal(t, time.Now().Format("01-02-2006"), result.creationDate)
+	require.Equal(t, blake2b.Sum256(content), result.Content)
+	require.Equal(t, "abcdefghijklmnop", result.Selector)
+	require.Equal(t, time.Now().Format("01-02-2006"), result.CreationDate)
 
 	local.WaitDone(genesisMsg.BlockInterval)
 
