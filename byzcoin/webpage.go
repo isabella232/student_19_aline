@@ -45,19 +45,34 @@ func (c *contractWebPage) Spawn(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Inst
 	// Store the URL of the page in the contract
 	cs.URLWebPage = URLArg
 
-	// Extract the content of the page
+	// Extract the selected content of the page using the selector
+
+	// Set up the connection
 	var transport http.RoundTripper = &http.Transport{
 		DisableKeepAlives: true, // To avoid Goroutine leakages
 	}
 
 	client := &http.Client{Transport: transport}
 	resp, _ := client.Get(URLArg)
-	content, _ := ioutil.ReadAll(resp.Body)
+
+	// Load the HTML document
+	doc, err := goquery.NewDocumentFromReader(resp.Body)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	// Find the desired section with the CSS selector
+	selector := string(inst.Spawn.Args.Search("Selector"))
+	var content string
+
+	doc.Find(selector).Each(func(_ int, s *goquery.Selection) {
+		content = s.Text()
+	})
 
 	// Store the hashed content of the page, the date and the selector in the contract
-	cs.Content = blake2b.Sum256(content)
+	cs.Content = blake2b.Sum256([]byte(content))
 	cs.CreationDate = time.Now().Format("01-02-2006")
-	cs.Selector = "abcdefghijklmnop"
+	cs.Selector = selector
 
 	// Put the data into our struct
 	csBuf, err := protobuf.Encode(&c.ContractWebPageData)
