@@ -1,12 +1,8 @@
 package byzcoin
 
 import (
-	"golang.org/x/crypto/blake2b"
-	"io/ioutil"
-	"net/http"
 	"testing"
 	"time"
-	//"golang.org/x/net/html"
 
 	"github.com/stretchr/testify/require"
 	"go.dedis.ch/cothority/v3"
@@ -14,6 +10,7 @@ import (
 	"go.dedis.ch/cothority/v3/darc"
 	"go.dedis.ch/onet/v3"
 	"go.dedis.ch/protobuf"
+	"golang.org/x/crypto/blake2b"
 )
 
 func TestValue_Spawn(t *testing.T) {
@@ -33,17 +30,9 @@ func TestValue_Spawn(t *testing.T) {
 	cl, _, err := byzcoin.NewLedger(genesisMsg, false)
 	require.Nil(t, err)
 
-	// Get the URL
+	// Provide arguments
 	URLArg := "http://www.mlppreservationproject.com/"
-
-	// Get the content
-	var transport http.RoundTripper = &http.Transport{
-		DisableKeepAlives: true, // to avoid Goroutine leakages
-	}
-
-	client := &http.Client{Transport: transport}
-	resp, _ := client.Get(string(URLArg))
-	content, _ := ioutil.ReadAll(resp.Body)
+	selector := "#txtBox_866 > p > span > span > span"
 
 	ctx, err := cl.CreateTransaction(byzcoin.Instruction{
 		InstanceID: byzcoin.NewInstanceID(gDarc.GetBaseID()),
@@ -52,7 +41,11 @@ func TestValue_Spawn(t *testing.T) {
 			Args: []byzcoin.Argument{{
 				Name:  "URLWebPage",
 				Value: []byte(URLArg),
-			}},
+			},
+				{
+					Name:  "Selector",
+					Value: []byte(selector),
+				}},
 		},
 		SignerCounter: []uint64{1},
 	})
@@ -83,11 +76,12 @@ func TestValue_Spawn(t *testing.T) {
 	require.Nil(t, err)
 
 	// Check the values of each field
-	require.Equal(t, URLArg, result.URLWebPage)
-	require.Equal(t, blake2b.Sum256(content), result.Content)
-	require.Equal(t, "abcdefghijklmnop", result.Selector)
-	require.Equal(t, time.Now().Format("01-02-2006"), result.CreationDate)
+	content := "Information on the restoration of ponies from all generations:"
 
+	require.Equal(t, URLArg, result.URLWebPage)
+	require.Equal(t, blake2b.Sum256([]byte(content)), result.Content)
+	require.Equal(t, selector, result.Selector)
+	require.Equal(t, time.Now().Format("01-02-2006"), result.CreationDate)
 	local.WaitDone(genesisMsg.BlockInterval)
 
 }
