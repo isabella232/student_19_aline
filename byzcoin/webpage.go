@@ -1,23 +1,15 @@
 package byzcoin
 
 import (
-	"golang.org/x/crypto/blake2b"
+	"log"
 	"net/http"
-	//"golang.org/x/net/html"
 	"time"
-	//"io"
-	"io/ioutil"
-	//"bytes"
 
+	"github.com/PuerkitoBio/goquery"
 	"go.dedis.ch/cothority/v3/byzcoin"
 	"go.dedis.ch/cothority/v3/darc"
 	"go.dedis.ch/protobuf"
-	//newstuff
-	//"bytes"
-	//"fmt"
-	//"io"
-	//"github.com/antchfx/xpath"
-	//"golang.org/x/net/html/charset"
+	"golang.org/x/crypto/blake2b"
 )
 
 var ContractWebPageID = "webPage"
