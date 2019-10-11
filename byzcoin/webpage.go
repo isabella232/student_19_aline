@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"time"
+	"strconv"
 
 	"github.com/PuerkitoBio/goquery"
 	"go.dedis.ch/cothority/v3/byzcoin"
@@ -65,9 +66,14 @@ func (c *contractWebPage) Spawn(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Inst
 	selector := string(inst.Spawn.Args.Search("Selector"))
 	var content string
 
-	doc.Find(selector).Each(func(_ int, s *goquery.Selection) {
-		content = s.Text()
-	})
+	selection := doc.Find(selector).First()
+	textOnly, _ := strconv.Atoi(string(inst.Spawn.Args.Search("TextOnly")))
+
+	if(textOnly == 1){
+		content = selection.Text()
+	} else {
+		content, _ = selection.Html()
+	}
 
 	// Store the hashed content of the page, the date and the selector in the contract
 	cs.Content = blake2b.Sum256([]byte(content))
