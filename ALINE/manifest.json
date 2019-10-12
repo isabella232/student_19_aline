@@ -1,0 +1,21 @@
+{
+	"name": "ALINE",
+	"version": "1.0.0",
+	"description": "ALINE stands for ''Attestation that online content existed'' and is a plugin to certify web content with the aid of a decentralized, proof-of-consensus, and blockchain-based ledger.",
+	"manifest_version": 2,
+	"icons": { "128": "icon.png" },
+	"author": "Charline Montial",
+    "background": {
+      "scripts": ["contextMenu.js"],
+      "persistent": false
+    },
+    
+	"browser_action": {
+    "default_icon": "icon.png",
+    "default_popup": "popup.html"
+  },
+  
+  "optional_permissions": [
+        "<all_urls>"
+  ]
+}
