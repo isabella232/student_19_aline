@@ -6,7 +6,7 @@
 	"icons": { "128": "icon.png" },
 	"author": "Charline Montial",
     "background": {
-      "scripts": ["contextMenu.js"],
+      "scripts": ["jquery-3.4.1.js", "popup.js" ],
       "persistent": false
     },
     
