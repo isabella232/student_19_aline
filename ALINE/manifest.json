@@ -6,7 +6,7 @@
 	"icons": { "128": "icon.png" },
 	"author": "Charline Montial",
     "background": {
-      "scripts": ["jquery-3.4.1.js", "popup.js" ],
+      "scripts": ["jquery-3.4.1.js", "dist/bundle.min.js" ],
       "persistent": false
     },
     
@@ -16,6 +16,7 @@
   },
   
   "optional_permissions": [
-        "<all_urls>"
-  ]
+        "<all_urls>", "webRequest", "https://wookiee.ch/conode"
+  ],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
