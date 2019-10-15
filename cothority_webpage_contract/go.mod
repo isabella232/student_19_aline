@@ -1,14 +1,20 @@
-module github.com/dedis/cothority_template
+module github.com/dedis/student_19_aline/cothority_webpage_contract
+
+go 1.12
 
 require (
 	github.com/BurntSushi/toml v0.3.1
 	github.com/PuerkitoBio/goquery v1.5.0
-	github.com/stretchr/testify v1.3.0
-	go.dedis.ch/cothority/v3 v3.2.0
-	go.dedis.ch/kyber/v3 v3.0.5
-	go.dedis.ch/onet/v3 v3.0.23
-	go.dedis.ch/protobuf v1.0.7
-	golang.org/x/crypto v0.0.0-20190208162236-193df9c0f06f
-	golang.org/x/net v0.0.0-20190206173232-65e2d4e15006
+	github.com/dedis/cothority_template v0.0.0-20191014071353-07abdb2fca40
+	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
+	github.com/modern-go/reflect2 v1.0.1 // indirect
+	github.com/stretchr/testify v1.4.0
+	go.dedis.ch/cothority/v3 v3.3.1
+	go.dedis.ch/kyber/v3 v3.0.7
+	go.dedis.ch/onet/v3 v3.0.26
+	go.dedis.ch/protobuf v1.0.10
+	golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550
 	gopkg.in/urfave/cli.v1 v1.20.0
 )
+
+replace github.com/dedis/student_19_aline/cothority_webpage_contract => /home/charline/Documents/Master_semester_project/student_19_aline/cothority_webpage_contract/byzcoin
