@@ -1,5 +1,3 @@
-cothority_webpage_contract/conode/log/
-
 ALINE/node_modules/
 
 ALINE/dist/popup\.d\.ts
@@ -7,3 +5,5 @@ ALINE/dist/popup\.d\.ts
 ALINE/package-lock\.json
 
 cothority_webpage_contract/conode/conode
+
+cothority_webpage_contract/conode/log/
