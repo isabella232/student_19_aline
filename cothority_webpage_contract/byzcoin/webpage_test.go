@@ -13,7 +13,7 @@ import (
 	"golang.org/x/crypto/blake2b"
 )
 
-func TestValue_Spawn(t *testing.T) {
+func TestSpawn(t *testing.T) {
 	local := onet.NewTCPTest(cothority.Suite)
 	defer local.CloseAll()
 
