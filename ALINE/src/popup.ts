@@ -5,16 +5,16 @@ export {
 };
 
 window.onload=function(){
-  console.log("Loaded");
     var checkPageButton = document.getElementById('fullpage');
     if(checkPageButton){
-        console.log("Button");
         checkPageButton.addEventListener('click', function() {
+          var url;
+
+          chrome.tabs.query({'active': true, 'lastFocusedWindow': true}, function (tabs) {
+              url = tabs[0].url;
+              p.innerText = url;
+          });
         const p = document.getElementById('status');
-        p.innerText = "This button works !";
-        console.log("Printed roster stats");
-        alert("Hello !");
-        PrintInfo(roster);
 
     }, false);
   }
