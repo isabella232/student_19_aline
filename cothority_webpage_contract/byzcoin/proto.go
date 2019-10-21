@@ -7,3 +7,9 @@ type ContractWebPageData struct {
 	CreationDate string
 	TextOnly int
 }
+
+type ContractWebPageArgs struct {
+	URLWebPage string
+	Selector string
+	TextOnly int
+}

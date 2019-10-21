@@ -33,23 +33,20 @@ func TestSpawn(t *testing.T) {
 	// Provide arguments
 	URLArg := "http://www.mlppreservationproject.com/"
 	selector := "#txtBox_650"
-	textOnly := "1"
+	//textOnly := "1"
+
+	var webPageArgs = ContractWebPageArgs{URLArg, selector, 1}
+	// Put the data into our struct
+	webPageArgsEncoded, err := protobuf.Encode(webPageArgs)
 
 	ctx, err := cl.CreateTransaction(byzcoin.Instruction{
 		InstanceID: byzcoin.NewInstanceID(gDarc.GetBaseID()),
 		Spawn: &byzcoin.Spawn{
 			ContractID: ContractWebPageID,
-			Args: []byzcoin.Argument{{
-				Name:  "URLWebPage",
-				Value: []byte(URLArg),
-			},
+			Args: []byzcoin.Argument{
 				{
-					Name:  "Selector",
-					Value: []byte(selector),
-				},
-				{
-					Name:  "TextOnly",
-					Value: []byte(textOnly),
+					Name:  "webPageArgs",
+					Value: webPageArgsEncoded,
 				}},
 		},
 		SignerCounter: []uint64{1},
