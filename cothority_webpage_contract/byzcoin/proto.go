@@ -5,5 +5,5 @@ type ContractWebPageData struct {
 	Content      [32]byte
 	Selector     string
 	CreationDate string
-	TextOnly     int
+	TextOnly     bool
 }
