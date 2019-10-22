@@ -35,9 +35,13 @@ func TestSpawn(t *testing.T) {
 	selector := "#txtBox_650"
 	//textOnly := "1"
 
-	var webPageArgs = ContractWebPageArgs{URLArg, selector, 1}
+	var webPageArgs = ContractWebPageData{}
+	webPageArgs.URLWebPage = URLArg
+	webPageArgs.Selector = selector
+	webPageArgs.TextOnly = 1
+
 	// Put the data into our struct
-	webPageArgsEncoded, err := protobuf.Encode(webPageArgs)
+	webPageArgsEncoded, err := protobuf.Encode(&webPageArgs)
 
 	ctx, err := cl.CreateTransaction(byzcoin.Instruction{
 		InstanceID: byzcoin.NewInstanceID(gDarc.GetBaseID()),
