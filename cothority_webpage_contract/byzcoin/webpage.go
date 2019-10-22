@@ -4,7 +4,6 @@ import (
 	"log"
 	"net/http"
 	"time"
-	"strconv"
 
 	"github.com/PuerkitoBio/goquery"
 	"go.dedis.ch/cothority/v3/byzcoin"
@@ -47,7 +46,7 @@ func (c *contractWebPage) Spawn(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Inst
 	}
 
 	// Extract the URL from inst.Spawn.Args
-	URLArg := string(inst.Spawn.Args.Search("URLWebPage"))
+	URLArg := webPageArgs.URLWebPage
 	cs := &c.ContractWebPageData
 
 	// Store the URL of the page in the contract
@@ -70,11 +69,11 @@ func (c *contractWebPage) Spawn(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Inst
 	}
 
 	// Find the desired section with the CSS selector
-	selector := string(inst.Spawn.Args.Search("Selector"))
+	selector := webPageArgs.Selector
 	var content string
 
 	selection := doc.Find(selector).First()
-	textOnly, _ := strconv.Atoi(string(inst.Spawn.Args.Search("TextOnly")))
+	textOnly := webPageArgs.TextOnly
 
 	if textOnly == 1 {
 		content = selection.Text()
