@@ -1,4 +1,5 @@
 import * as Cothority from "@dedis/cothority";
+import ByzCoinRPC from "@dedis/cothority/byzcoin/byzcoin-rpc";
 
 export {
   Cothority
@@ -15,7 +16,7 @@ window.onload = function() {
       }, function(tabs) {
         url = tabs[0].url;
         p.innerText = url;
-        //TEST : INTEGRATE CONTRACT PART BEGINNING
+        /*//TEST : INTEGRATE CONTRACT PART BEGINNING
         beforeAll(async () => {
           await startConodes();
         });
@@ -40,7 +41,7 @@ window.onload = function() {
           //await vi.update();
           //expect(vi.value).toEqual(value2);
         });
-        //TEST : INTEGRATE CONTRACT PART BEGINNING
+        //TEST : INTEGRATE CONTRACT PART BEGINNING*/
 
       });
       const p = document.getElementById('status');
