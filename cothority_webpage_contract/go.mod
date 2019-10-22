@@ -6,8 +6,6 @@ require (
 	github.com/BurntSushi/toml v0.3.1
 	github.com/PuerkitoBio/goquery v1.5.0
 	github.com/dedis/cothority_template v0.0.0-20191014071353-07abdb2fca40
-	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
-	github.com/modern-go/reflect2 v1.0.1 // indirect
 	github.com/stretchr/testify v1.4.0
 	go.dedis.ch/cothority/v3 v3.3.1
 	go.dedis.ch/kyber/v3 v3.0.7

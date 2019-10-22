@@ -47,9 +47,9 @@ func (c *contractWebPage) Spawn(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Inst
 
 	// Extract the URL from inst.Spawn.Args
 	URLArg := webPageArgs.URLWebPage
-	cs := &c.ContractWebPageData
 
 	// Store the URL of the page in the contract
+	cs := &c.ContractWebPageData
 	cs.URLWebPage = URLArg
 
 	// Extract the selected content of the page using the selector
@@ -73,9 +73,8 @@ func (c *contractWebPage) Spawn(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Inst
 	var content string
 
 	selection := doc.Find(selector).First()
-	textOnly := webPageArgs.TextOnly
 
-	if textOnly == 1 {
+	if webPageArgs.TextOnly == 1 {
 		content = selection.Text()
 	} else {
 		content, _ = selection.Html()
