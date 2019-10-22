@@ -74,7 +74,9 @@ func (c *contractWebPage) Spawn(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Inst
 
 	selection := doc.Find(selector).First()
 
-	if webPageArgs.TextOnly == 1 {
+	textOnly := webPageArgs.TextOnly
+
+	if textOnly {
 		content = selection.Text()
 	} else {
 		content, _ = selection.Html()
@@ -84,6 +86,7 @@ func (c *contractWebPage) Spawn(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Inst
 	cs.Content = blake2b.Sum256([]byte(content))
 	cs.CreationDate = time.Now().Format("01-02-2006")
 	cs.Selector = selector
+	cs.TextOnly = textOnly
 
 	// Put the data into our struct
 	csBuf, err := protobuf.Encode(&c.ContractWebPageData)

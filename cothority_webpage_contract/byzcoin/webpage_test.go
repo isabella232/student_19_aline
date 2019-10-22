@@ -33,12 +33,12 @@ func TestSpawn(t *testing.T) {
 	// Provide arguments
 	URLArg := "http://www.mlppreservationproject.com/"
 	selector := "#txtBox_650"
-	//textOnly := "1"
+	textOnly := true
 
 	var webPageArgs = ContractWebPageData{}
 	webPageArgs.URLWebPage = URLArg
 	webPageArgs.Selector = selector
-	webPageArgs.TextOnly = 1
+	webPageArgs.TextOnly = textOnly
 
 	// Put the data into our struct
 	webPageArgsEncoded, err := protobuf.Encode(&webPageArgs)
@@ -88,6 +88,7 @@ func TestSpawn(t *testing.T) {
 	require.Equal(t, blake2b.Sum256([]byte(content)), result.Content)
 	require.Equal(t, selector, result.Selector)
 	require.Equal(t, time.Now().Format("01-02-2006"), result.CreationDate)
+	require.Equal(t, textOnly, result.TextOnly)
 	local.WaitDone(genesisMsg.BlockInterval)
 
 }
