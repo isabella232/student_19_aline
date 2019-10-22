@@ -40,7 +40,7 @@ func (c *contractWebPage) Spawn(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Inst
 
 	// Extract arguments from inst.Spawn.Args
 	webPageArgs := ContractWebPageData{}
-	decodeErr := protobuf.Decode(inst.Spawn.Args.Search("webPageArgs"), webPageArgs)
+	decodeErr := protobuf.Decode(inst.Spawn.Args.Search("webPageArgs"), &webPageArgs)
 	if decodeErr != nil {
 		return
 	}
@@ -75,7 +75,7 @@ func (c *contractWebPage) Spawn(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Inst
 	selection := doc.Find(selector).First()
 	textOnly := webPageArgs.TextOnly
 
-	if(textOnly == 1){
+	if textOnly == 1 {
 		content = selection.Text()
 	} else {
 		content, _ = selection.Html()
@@ -107,7 +107,7 @@ func (c *contractWebPage) Delete(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Ins
 		return
 	}
 
-	// Delete removes all the data from the global state.
+	// Delete removes all the data from the global state
 	sc = byzcoin.StateChanges{byzcoin.NewStateChange(byzcoin.Remove, inst.InstanceID, ContractWebPageID, nil, darcID)}
 	return
 }
