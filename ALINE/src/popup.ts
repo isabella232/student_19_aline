@@ -1,9 +1,7 @@
 import * as Cothority from "@dedis/cothority";
 import ByzCoinRPC from "@dedis/cothority/byzcoin/byzcoin-rpc";
-import { WebPageInstance} from "WebPageInstance";
+import {WebPageInstance, ContractWebPageData} from "./WebPageInstance";
 import { EMPTY_BUFFER } from '@dedis/cothority/protobuf';
-import { ContractWebPageData } from './WebPageInstance';
-
 
 export {
   Cothority
