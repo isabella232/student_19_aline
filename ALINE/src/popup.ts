@@ -185,17 +185,17 @@ export function spawnKV(keyID: string, valueID: string) {
 
 export function printKV(instIDID: string) {
   try {
-      var r: string = Handler.checkRoster() || Handler.checkDarc() || Handler.checkSigner();
-      if (r != "") {
-          Handler.prev vnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn                     nnnnnnnnnnnnnnnnnnnnvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvv                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  vvvvvvvvvvvvvvvvvvvvvv                                                 nvnvnnnnnnnnnnnvvvvnnnvnvvvv              vvnvnvvv       vvnvnnnvv                                        n   nn         nnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnnn    nvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvnvnvvnvnnnvvnvv                      nvvn                                                                                                                                vvvnvn          nnvvvvvvvvvvvvvvvvvvvvvvvvvvvnnvn nnnnnvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvvnvnnnnnnvnnn      nvvvn nnnvvvn cvvcxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxdddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddpendLog(r)
-          return
-      }
-      const instIDHolder = document.getElementById(instIDID) as HTMLInputElement
-      const instIDStr = instIDHolder.value
-      if (instIDStr == "") {dcc
-          Handler.prependLog("please provide an instance id")
-          return
-      }
+    var r: string = Handler.checkRoster() || Handler.checkDarc() || Handler.checkSigner();
+    if (r != "") {
+        Handler.prependLog(r)
+        return
+    }
+    const instIDHolder = document.getElementById(instIDID) as HTMLInputElement
+    const instIDStr = instIDHolder.value
+    if (instIDStr == "") {
+        Handler.prependLog("please provide an instance id")
+        return
+    }
 
       Handler.getInstance().PrintKV(Buffer.from(instIDStr, "hex"));
   } catch (e) {
@@ -371,11 +371,11 @@ class Handler {
               Handler.prependLog("RPC created, we now send a spawn:keyValue request...")
               //TODO
               WebPageInstance.spawn(r, Handler.darc.getBaseID(), [Handler.signer], URLWebPage, Buffer.from(valueStr)).then(
-                  (webPageInstance) => {
+                  (webPageInstance: WebPageInstance) => {
                       // Handler.prependLog("Key value instance spawned: " + webPageInstance)
                       Handler.prependLog("Key value instance spawned: \n" + webPageInstance.toString() + "\nInstance ID: " + webPageInstance.id.toString("hex"))
                   },
-                  (e) => {
+                  (e: Error) => {
                       console.error(e);
                       Handler.prependLog("failed to spawn the key value instance: " + e)
                   }
@@ -394,7 +394,7 @@ class Handler {
       Handler.startLoader()
       Handler.prependLog("creating an RPC to get the key value instance...")
       const rpc = Cothority.byzcoin.ByzCoinRPC.fromByzcoin(Handler.roster, Handler.scid)
-      rpc.the n(
+      rpc.then(
           (r) => {
               Handler.prependLog("RPC created, we now send a get proof request...")
               r.getProofFromLatest(instIDStr).then(
@@ -409,14 +409,13 @@ class Handler {
                           return
                       }
                       Handler.prependLog("ok, now let's decode it...")
-                      //TODO: TO ADAPT
-                      var kvInstance = ContractWebPageData.decode(proof.value);
-                      console.log(kvInstance)
-                      Handler.prependLog("here is the key value instance: \n" + kvInstance.toString())
+                      var contractWebPageData = ContractWebPageData.decode(proof.value);
+                      console.log(contractWebPageData)
+                      Handler.prependLog("here is the key value instance: \n" + contractWebPageData.toString())
                   },
                   (e) => {
                       console.error(e)
-                      Handler.prependLog("failed to get the key value instance: " + e)
+                      Handler.prependLog("failed to get the contract web page instance: " + e)
                   }
               ).finally(
                   () => Handler.stopLoader()
