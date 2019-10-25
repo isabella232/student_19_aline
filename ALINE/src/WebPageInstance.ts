@@ -112,22 +112,6 @@ export class ContractWebPageData extends Message<ContractWebPageData> {
     }
 }
 
-export class KeyValue extends Message<KeyValue> {
-    key: string;
-    value: Buffer;
-
-    constructor(props?: Properties<KeyValue>) {
-        super(props);
-
-        this.key = this.key || "default";
-        this.value = Buffer.from(this.value || EMPTY_BUFFER)
-    }
-
-    static register() {
-        registerMessage("KeyValue", KeyValue);
-    }
-}
-
 // Here we update the model with our models.json containing the definition of
 // the ContractWebPageData and we register our messages classes, so that protobuf can
 // encore and decode it.
