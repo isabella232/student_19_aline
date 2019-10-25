@@ -13,7 +13,13 @@ module.exports = {
         rules: [
             {
                 test: /\.js$/,
-                exclude: /node_modules/,
+                include: [
+                    // Because of the way the cothority librairy is released we
+                    // must include the cothority source in order to proprely 
+                    // transpile it.
+                    /node_modules\/@dedis\/cothority/,
+                    /.\/src/
+                ],
                 use: {
                     loader: "babel-loader",
                     options: {
@@ -23,7 +29,10 @@ module.exports = {
             },
             {
                 test: /\.ts$/,
-                exclude: /node_modules/,
+                include: [
+                    /node_modules\/@dedis\/cothority/,
+                    /.\/src/
+                ],
                 use: [
                     {
                         loader: "babel-loader",
