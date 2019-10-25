@@ -17,7 +17,7 @@ export class WebPageInstance extends Instance {
     static readonly contractID = "webPage";
     contractWebPageData: ContractWebPageData;
 
-    static async spawn(bc: ByzCoinRPC, darcID: InstanceID, signers: Signer[], webPageArgsEncoded: Buffer): Promise<WebPageInstance> {
+    static async spawn(bc: ByzCoinRPC, darcID: InstanceID, signers: Signer[], key: string, webPageArgsEncoded: Buffer): Promise<WebPageInstance> {
         
         const arg = new Argument({
             name:  "webPageArgs",
