@@ -92,7 +92,7 @@ export class ContractWebPageData extends Message<ContractWebPageData> {
     }
 
     static register() {
-        registerMessage("KeyValueData", ContractWebPageData, KeyValue);
+        registerMessage("ContractWebPageDara", ContractWebPageData);
     }
 
     toString(): string {
