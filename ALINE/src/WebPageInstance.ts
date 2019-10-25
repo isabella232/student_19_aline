@@ -6,13 +6,12 @@ import { EMPTY_BUFFER, registerMessage } from "@dedis/cothority/protobuf";
 
 import { addJSON } from '@dedis/cothority/protobuf';
 import models from "../src/protobuf/models.json";
-//Importer relativement
 
 import { Message, Properties } from "protobufjs/light";
 
 /**
  * This class offers a wrapper around the cothority library to spawn and update
- * a keyValue contract.
+ * a webPage contract.
  */
 export class WebPageInstance extends Instance {
     static readonly contractID = "webPage";
@@ -58,7 +57,6 @@ export class WebPageInstance extends Instance {
             throw new Error(`mismatch contract name: ${inst.contractID} vs 
             ${WebPageInstance.contractID}`);
         }
-        //TODO: My type not recognized
         this.contractWebPageData = ContractWebPageData.decode(inst.data)
     }
 
@@ -72,9 +70,8 @@ export class WebPageInstance extends Instance {
 }
 
 /**
- * This class declares a message to encode/decode the content of a keyValue
- * instance, namely a KeyValueData struct. It follows the definition of the
- * keyvalue.proto.
+ * This class declares a message to encode/decode the content of a webPage
+ * instance, namely a ContractWebPageData struct.
  */
 export class ContractWebPageData extends Message<ContractWebPageData> {
     URLWebPage: string;
@@ -132,7 +129,7 @@ export class KeyValue extends Message<KeyValue> {
 }
 
 // Here we update the model with our models.json containing the definition of
-// the keyValueData and we register our messages classes, so that protobuf can
+// the ContractWebPageData and we register our messages classes, so that protobuf can
 // encore and decode it.
 addJSON(models)
 ContractWebPageData.register()
