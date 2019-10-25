@@ -18,33 +18,8 @@ window.onload = function() {
       }, function(tabs) {
         url = tabs[0].url;
         p.innerText = url;
-        //TEST : INTEGRATE CONTRACT PART BEGINNING
-        beforeAll(async () => {
-          await startConodes();
-        });
-
-        it("should spawn a value instance", async () => {
-          const darc = ByzCoinRPC.makeGenesisDarc([SIGNER], roster);
-          darc.addIdentity("spawn:webPage", SIGNER, Rule.OR);
-          darc.addIdentity("invoke:value.update", SIGNER, Rule.OR);
-
-          const rpc = await ByzCoinRPC.newByzCoinRPC(roster, darc, BLOCK_INTERVAL);
-          const value = Buffer.from("value instance");
-          const vi = await WebPageInstance.spawn(rpc, darc.getBaseID(), [SIGNER], value);
-
-          //expect(vi.value).toEqual(value);
-
-          const vi2 = await WebPageInstance.fromByzcoin(rpc, vi.id);
-          //expect(vi2.value).toEqual(value);
-          //const value2 = Buffer.from("new value of value instance");
-          await vi2.updateValue([SIGNER], value2);
-
-          //expect(vi.value).toEqual(value);
-          //await vi.update();
-          //expect(vi.value).toEqual(value2);
-        });
-        //TEST : INTEGRATE CONTRACT PART BEGINNING*/
-
+        // CONTRACT USE BEGINNING
+        // CONTRACT USE END */
       });
       const p = document.getElementById('status');
 
