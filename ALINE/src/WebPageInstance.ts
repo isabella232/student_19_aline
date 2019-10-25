@@ -5,7 +5,8 @@ import Instance, { InstanceID } from "@dedis/cothority/byzcoin/instance";
 import { EMPTY_BUFFER, registerMessage } from "@dedis/cothority/protobuf";
 
 import { addJSON } from '@dedis/cothority/protobuf';
-import models from "./protobuf/models.json";
+import models from "../src/protobuf/models.json";
+//Importer relativement
 
 import { Message, Properties } from "protobufjs/light";
 
@@ -15,15 +16,14 @@ import { Message, Properties } from "protobufjs/light";
  */
 export class WebPageInstance extends Instance {
     static readonly contractID = "webPage";
-    keyValueData: KeyValueData;
+    contractWebPageData: ContractWebPageData;
 
-    static async spawn(bc: ByzCoinRPC, darcID: InstanceID, signers: Signer[], 
-        key: string, value: Buffer): Promise<WebPageInstance> {
+    static async spawn(bc: ByzCoinRPC, darcID: InstanceID, signers: Signer[], webPageArgsEncoded: Buffer): Promise<WebPageInstance> {
         
         const arg = new Argument({
-            name: key, 
-            value: value
-        })
+            name:  "webPageArgs",
+            value: webPageArgsEncoded,
+        });
         const inst = Instruction.createSpawn(darcID, WebPageInstance.contractID, [arg]);
 
         const ctx = ClientTransaction.make(bc.getProtocolVersion(), inst);
@@ -34,14 +34,14 @@ export class WebPageInstance extends Instance {
         return WebPageInstance.fromByzcoin(bc, ctx.instructions[0].deriveId(), 10);
     }
 
-    static create(bc: ByzCoinRPC, valueID: InstanceID, darcID: InstanceID, 
+    static create(bc: ByzCoinRPC, instanceID: InstanceID, darcID: InstanceID, 
         data: Buffer): WebPageInstance {
 
         return new WebPageInstance(bc, new Instance({
             contractID: WebPageInstance.contractID,
             darcID,
             data: data,
-            id: valueID,
+            id: instanceID,
         }));
     }
 
@@ -58,15 +58,15 @@ export class WebPageInstance extends Instance {
             throw new Error(`mismatch contract name: ${inst.contractID} vs 
             ${WebPageInstance.contractID}`);
         }
-
-        this.keyValueData = KeyValueData.decode(inst.data)
+        //TODO: My type not recognized
+        this.contractWebPageData = ContractWebPageData.decode(inst.data)
     }
 
 
     toString(): string {
         var res: string = "";
         res += "WebPageInstance:\n";
-        res += this.keyValueData.toString()
+        res += this.contractWebPageData.toString()
         return res;
     }
 }
@@ -76,29 +76,36 @@ export class WebPageInstance extends Instance {
  * instance, namely a KeyValueData struct. It follows the definition of the
  * keyvalue.proto.
  */
-export class KeyValueData extends Message<KeyValueData> {
-    storage: KeyValue[];
+export class ContractWebPageData extends Message<ContractWebPageData> {
+    URLWebPage: string;
+    Content: Uint8Array;
+    Selector: string;
+    CreationDate: string;
+    TextOnly: boolean;
 
-    constructor(props?: Properties<KeyValueData>) {
+    constructor(props?: Properties<ContractWebPageData>) {
         super(props);
 
         this.storage = this.storage || [];
     }
 
     static register() {
-        registerMessage("KeyValueData", KeyValueData, KeyValue);
+        registerMessage("KeyValueData", ContractWebPageData, KeyValue);
     }
 
     toString(): string {
         var res: string = "";
-        res += "keyValueData:";
-        var i = 1;
-        this.storage.forEach(element => {
-            res += "\n- KV " + i + ":"
-            res += "\n-- key: " + element.key
-            res += "\n-- value: " + element.value.toString("utf8")
-            i++;
-        });
+        res += "contractWebPageData:\n";
+        res += "URL: " + this.URLWebPage;
+        res += "\n";
+        res += "Content: " + this.Content;
+        res += "\n";
+        res += "Selector: " + this.Selector;
+        res += "\n";
+        res += "Creation Date: " + this.CreationDate;
+        res += "\n";
+        res += "Text Only: " + this.TextOnly;
+        res += "\n";
         return res;
     }
 }
@@ -123,5 +130,4 @@ export class KeyValue extends Message<KeyValue> {
 // the keyValueData and we register our messages classes, so that protobuf can
 // encore and decode it.
 addJSON(models)
-KeyValue.register()
-KeyValueData.register()
+ContractWebPageData.register()
