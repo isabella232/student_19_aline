@@ -158,26 +158,14 @@ export function addRule(rID: string) {
   }
 }
 
-export function spawnKV(keyID: string, valueID: string) {
+export function spawnWebPage(contractWebPageData : ContractWebPageData) {
   try {
       var r: string = Handler.checkRoster() || Handler.checkDarc() || Handler.checkSigner();
       if (r != "") {
           Handler.prependLog(r)
           return
       }
-      const keyHolder = document.getElementById(keyID) as HTMLInputElement
-      const valueHolder = document.getElementById(valueID) as HTMLInputElement
-      const keyStr = keyHolder.value
-      if (keyStr == "") {
-          Handler.prependLog("please provide a key")
-          return
-      }
-      const valueStr = valueHolder.value
-      if (valueStr == "") {
-          Handler.prependLog("please provide a value. Empty value is not allowed in spawn")
-          return
-      }
-      Handler.getInstance().SpawnKV(keyStr, valueStr);
+      Handler.getInstance().SpawnWebPage(contractWebPageData);
   } catch (e) {
       Handler.prependLog("failed to spawn keyValue instance: " + e)
   }
@@ -197,7 +185,7 @@ export function printKV(instIDID: string) {
         return
     }
 
-      Handler.getInstance().PrintKV(Buffer.from(instIDStr, "hex"));
+      Handler.getInstance().PrintWebPage(Buffer.from(instIDStr, "hex"));
   } catch (e) {
       Handler.prependLog("failed to print keyValue instance: " + e)
   }
@@ -359,25 +347,22 @@ class Handler {
       )
   }
 
-  SpawnKV(URLWebPage: string) {
-    //Passer structure en argument encodé (.encode)
-
-    //La "clé" peut être hardcodée
+  SpawnWebPage(contractWebPageData: ContractWebPageData) {
       Handler.startLoader()
-      Handler.prependLog("creating an RPC to spawn a new key value instance...")
+      Handler.prependLog("creating an RPC to spawn a new web page instance...")
       const rpc = Cothority.byzcoin.ByzCoinRPC.fromByzcoin(Handler.roster, Handler.scid)
       rpc.then(
           (r) => {
-              Handler.prependLog("RPC created, we now send a spawn:keyValue request...")
+              Handler.prependLog("RPC created, we now send a spawn:webPage request...")
               //TODO
-              WebPageInstance.spawn(r, Handler.darc.getBaseID(), [Handler.signer], URLWebPage, Buffer.from(valueStr)).then(
+              WebPageInstance.spawn(r, Handler.darc.getBaseID(), [Handler.signer], "webPageArgs", ContractWebPageData.encode(contractWebPageData)).then(
                   (webPageInstance: WebPageInstance) => {
-                      // Handler.prependLog("Key value instance spawned: " + webPageInstance)
-                      Handler.prependLog("Key value instance spawned: \n" + webPageInstance.toString() + "\nInstance ID: " + webPageInstance.id.toString("hex"))
+                      // Handler.prependLog("Web page instance spawned: " + webPageInstance)
+                      Handler.prependLog("Web Pageinstance spawned: \n" + webPageInstance.toString() + "\nInstance ID: " + webPageInstance.id.toString("hex"))
                   },
                   (e: Error) => {
                       console.error(e);
-                      Handler.prependLog("failed to spawn the key value instance: " + e)
+                      Handler.prependLog("failed to spawn the web page instance: " + e)
                   }
               ).finally(
                   () => Handler.stopLoader()
@@ -390,9 +375,9 @@ class Handler {
       )
   }
 
-  PrintKV(instIDStr: Buffer) {
+  PrintWebPage(instIDStr: Buffer) {
       Handler.startLoader()
-      Handler.prependLog("creating an RPC to get the key value instance...")
+      Handler.prependLog("creating an RPC to get the web page instance...")
       const rpc = Cothority.byzcoin.ByzCoinRPC.fromByzcoin(Handler.roster, Handler.scid)
       rpc.then(
           (r) => {
@@ -405,13 +390,13 @@ class Handler {
                           return
                       }
                       if (!proof.matchContract(WebPageInstance.contractID)) {
-                          Handler.prependLog("this is not a proof for the keyValue contrac... aborting!")
+                          Handler.prependLog("this is not a proof for the webPage contrac... aborting!")
                           return
                       }
                       Handler.prependLog("ok, now let's decode it...")
                       var contractWebPageData = ContractWebPageData.decode(proof.value);
                       console.log(contractWebPageData)
-                      Handler.prependLog("here is the key value instance: \n" + contractWebPageData.toString())
+                      Handler.prependLog("here is the web page instance: \n" + contractWebPageData.toString())
                   },
                   (e) => {
                       console.error(e)
