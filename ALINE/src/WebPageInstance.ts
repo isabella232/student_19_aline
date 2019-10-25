@@ -86,7 +86,12 @@ export class ContractWebPageData extends Message<ContractWebPageData> {
     constructor(props?: Properties<ContractWebPageData>) {
         super(props);
 
-        this.storage = this.storage || [];
+        this.URLWebPage = this.URLWebPage || "No URL has been found.";
+        this.Content = this.Content || EMPTY_BUFFER;
+        this.Selector = this.Selector|| "No selector has been found";
+        this.CreationDate = this.CreationDate || "No creation date has been found";
+        this.TextOnly = this.TextOnly || true;
+
     }
 
     static register() {
