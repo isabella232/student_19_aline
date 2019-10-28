@@ -19,6 +19,17 @@ window.onload = function() {
         url = tabs[0].url;
         p.innerText = url;
         // CONTRACT USE BEGINNING
+        //Load public.toml file
+        displayStatus()
+        getDarc("skipchainID")
+        loadSigner("signerID")
+        addRule("ruleID")
+        var contractWebPageData = new ContractWebPageData();
+        contractWebPageData.URLWebPage = url;
+        contractWebPageData.Selector = "html"
+        contractWebPageData.TextOnly = false;
+        spawnWebPage(contractWebPageData)
+        printWebPageContract("instID")
         // CONTRACT USE END */
       });
       const p = document.getElementById('status');
@@ -167,11 +178,11 @@ export function spawnWebPage(contractWebPageData : ContractWebPageData) {
       }
       Handler.getInstance().SpawnWebPage(contractWebPageData);
   } catch (e) {
-      Handler.prependLog("failed to spawn keyValue instance: " + e)
+      Handler.prependLog("failed to spawn webPage instance: " + e)
   }
 }
 
-export function printKV(instIDID: string) {
+export function printWebPageContract(instIDID: string) {
   try {
     var r: string = Handler.checkRoster() || Handler.checkDarc() || Handler.checkSigner();
     if (r != "") {
@@ -187,7 +198,7 @@ export function printKV(instIDID: string) {
 
       Handler.getInstance().PrintWebPage(Buffer.from(instIDStr, "hex"));
   } catch (e) {
-      Handler.prependLog("failed to print keyValue instance: " + e)
+      Handler.prependLog("failed to print webPage instance: " + e)
   }
 }
 
