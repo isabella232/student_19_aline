@@ -366,7 +366,7 @@ class Handler {
           (r) => {
               Handler.prependLog("RPC created, we now send a spawn:webPage request...")
               //TODO
-              WebPageInstance.spawn(r, Handler.darc.getBaseID(), [Handler.signer], "webPageArgs", ContractWebPageData.encode(contractWebPageData)).then(
+              WebPageInstance.spawn(r, Handler.darc.getBaseID(), [Handler.signer], "webPageArgs", Buffer.from(ContractWebPageData.encode(contractWebPageData).finish())).then(
                   (webPageInstance: WebPageInstance) => {
                       // Handler.prependLog("Web page instance spawned: " + webPageInstance)
                       Handler.prependLog("Web Pageinstance spawned: \n" + webPageInstance.toString() + "\nInstance ID: " + webPageInstance.id.toString("hex"))
