@@ -2,11 +2,8 @@ import Signer from "@dedis/cothority/darc/signer";
 import ByzCoinRPC from "@dedis/cothority/byzcoin/byzcoin-rpc";
 import ClientTransaction, { Argument, Instruction } from "@dedis/cothority/byzcoin/client-transaction";
 import Instance, { InstanceID } from "@dedis/cothority/byzcoin/instance";
-import { EMPTY_BUFFER, registerMessage } from "@dedis/cothority/protobuf";
-
-import { addJSON } from '@dedis/cothority/protobuf';
+import { addJSON, EMPTY_BUFFER, registerMessage } from "@dedis/cothority/protobuf";
 import models from "../src/protobuf/models.json";
-
 import { Message, Properties } from "protobufjs/light";
 
 /**
