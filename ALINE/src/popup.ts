@@ -155,16 +155,18 @@ export function addRule(rID: string) {
   }
 }
 
-export function spawnWebPage(contractWebPageData : ContractWebPageData) {
+export function spawnWebPage(contractWebPageData : ContractWebPageData) : string {
+    let webPageContractID : string = "NO ID COULD HAVE BEEN RETRIEVED."
   try {
       var r: string = Handler.checkRoster() || Handler.checkDarc() || Handler.checkSigner();
       if (r != "") {
           Handler.prependLog(r)
           return
       }
-      Handler.getInstance().SpawnWebPage(contractWebPageData);
+      webPageContractID = Handler.getInstance().SpawnWebPage(contractWebPageData)
+      return webPageContractID
   } catch (e) {
-      Handler.prependLog("failed to spawn webPage instance: " + e)
+      Handler.prependLog("Failed to spawn webPage instance: " + e)
   }
 }
 
