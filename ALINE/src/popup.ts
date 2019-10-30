@@ -17,20 +17,34 @@ window.onload = function() {
         'lastFocusedWindow': true
       }, function(tabs) {
         url = tabs[0].url;
-        p.innerText = url;
-        // CONTRACT USE BEGINNING
-        //Load public.toml file
-        displayStatus()
-        getDarc("skipchainID")
-        loadSigner("signerID")
-        addRule("ruleID")
+        // ** CONTRACT **//
+
+        // Get public.toml
+        var handler = Handler.getInstance();
+        handler.LoadRoster(roster);
+
+        // Skip chain ID
+        getDarc("5125cffd5ecc6b7d650150ef598a67f7af3fb1e096504327c89c89ac2f33a58a");
+
+        // Private Key
+        loadSigner("aace6eb41c6c5214fa4ed3b946049359a225d704d9dd37ed2a7f2583390cac02");
+
+        // Add rule to spawn the webPage contract
+        addRule("spawn:webPage");
+
+        // Spawn the webPage contract
         var contractWebPageData = new ContractWebPageData();
         contractWebPageData.URLWebPage = url;
         contractWebPageData.Selector = "html"
         contractWebPageData.TextOnly = false;
-        spawnWebPage(contractWebPageData)
-        printWebPageContract("instID")
-        // CONTRACT USE END */
+        
+        let webPageContractID : string = spawnWebPage(contractWebPageData);
+        
+        // Print the webPage contract
+       // p.innerText = "I don't know what is going on my friend"
+        printWebPageContract(webPageContractID)
+        p.innerText = webPageContractID;
+
       });
       const p = document.getElementById('status');
 
