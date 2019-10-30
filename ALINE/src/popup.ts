@@ -358,25 +358,28 @@ class Handler {
       )
   }
 
-  SpawnWebPage(contractWebPageData: ContractWebPageData) {
+  SpawnWebPage(contractWebPageData: ContractWebPageData) : string {
       Handler.startLoader()
       Handler.prependLog("creating an RPC to spawn a new web page instance...")
       const rpc = Cothority.byzcoin.ByzCoinRPC.fromByzcoin(Handler.roster, Handler.scid)
+      let webPageInstanceID : string = "NO ID COULD HAVE BEEN RETRIEVED."
       rpc.then(
           (r) => {
               Handler.prependLog("RPC created, we now send a spawn:webPage request...")
-              //TODO
               WebPageInstance.spawn(r, Handler.darc.getBaseID(), [Handler.signer], "webPageArgs", Buffer.from(ContractWebPageData.encode(contractWebPageData).finish())).then(
                   (webPageInstance: WebPageInstance) => {
                       // Handler.prependLog("Web page instance spawned: " + webPageInstance)
                       Handler.prependLog("Web Pageinstance spawned: \n" + webPageInstance.toString() + "\nInstance ID: " + webPageInstance.id.toString("hex"))
-                  },
+                        webPageInstanceID = webPageInstance.id.toString("hex")
+                    },
                   (e: Error) => {
                       console.error(e);
                       Handler.prependLog("failed to spawn the web page instance: " + e)
                   }
               ).finally(
-                  () => Handler.stopLoader()
+                  () => {
+                      Handler.stopLoader()
+                  }
               )
           },
           (e) => {
@@ -384,6 +387,8 @@ class Handler {
               Handler.prependLog("failed to create RPC: " + e)
           }
       )
+      return webPageInstanceID
+
   }
 
   PrintWebPage(instIDStr: Buffer) {
