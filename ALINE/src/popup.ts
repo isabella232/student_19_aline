@@ -11,12 +11,18 @@ window.onload = function() {
   var checkPageButton = document.getElementById('fullpage');
   if (checkPageButton) {
     checkPageButton.addEventListener('click', function() {
+    // Retrieve current URL  
       var url;
       chrome.tabs.query({
         'active': true,
         'lastFocusedWindow': true
       }, function(tabs) {
         url = tabs[0].url;
+
+        // Retrieve TextOnly field
+        const textOnlyBox = document.getElementById('txtOnly')as HTMLInputElement;
+        var textOnly = textOnlyBox.checked
+
         // ** CONTRACT **//
 
         // Get public.toml
@@ -38,12 +44,12 @@ window.onload = function() {
         contractWebPageData.Selector = "html"
         contractWebPageData.TextOnly = false;
         
-        let webPageContractID : string = spawnWebPage(contractWebPageData);
+        //let webPageContractID : string = spawnWebPage(contractWebPageData);
         
         // Print the webPage contract
-       // p.innerText = "I don't know what is going on my friend"
-        printWebPageContract(webPageContractID)
-        p.innerText = webPageContractID;
+        p.innerText = "I don't know what is going on my friend"
+        //p.innerText = webPageContractID; //ID to save somewhere
+        //Then to print our instance we use toString of WebPageContractInstance
 
       });
       const p = document.getElementById('status');
