@@ -11,6 +11,7 @@ window.onload = function() {
   var checkPageButton = document.getElementById('fullpage');
   if (checkPageButton) {
     checkPageButton.addEventListener('click', function() {
+
     // Retrieve current URL  
       var url;
       chrome.tabs.query({
@@ -20,40 +21,40 @@ window.onload = function() {
         url = tabs[0].url;
 
         // Retrieve TextOnly field
-        const textOnlyBox = document.getElementById('txtOnly')as HTMLInputElement;
+        const textOnlyBox = document.getElementById('txtOnly') as HTMLInputElement;
         var textOnly = textOnlyBox.checked
 
         // ** CONTRACT **//
+        const p = document.getElementById('status');
+
 
         // Get public.toml
         var handler = Handler.getInstance();
         handler.LoadRoster(roster);
+        //p.innerText = "roaster loaded"
+
 
         // Skip chain ID
-        getDarc("5125cffd5ecc6b7d650150ef598a67f7af3fb1e096504327c89c89ac2f33a58a");
+       // getDarc("5125cffd5ecc6b7d650150ef598a67f7af3fb1e096504327c89c89ac2f33a58a");
 
         // Private Key
-        loadSigner("aace6eb41c6c5214fa4ed3b946049359a225d704d9dd37ed2a7f2583390cac02");
+        //loadSigner("aace6eb41c6c5214fa4ed3b946049359a225d704d9dd37ed2a7f2583390cac02");
 
         // Add rule to spawn the webPage contract
-        addRule("spawn:webPage");
+        //addRule("spawn:webPage");
 
         // Spawn the webPage contract
         var contractWebPageData = new ContractWebPageData();
         contractWebPageData.URLWebPage = url;
         contractWebPageData.Selector = "html"
-        contractWebPageData.TextOnly = false;
+        contractWebPageData.TextOnly = textOnly;
         
         //let webPageContractID : string = spawnWebPage(contractWebPageData);
         
         // Print the webPage contract
-        p.innerText = "I don't know what is going on my friend"
         //p.innerText = webPageContractID; //ID to save somewhere
         //Then to print our instance we use toString of WebPageContractInstance
-
-      });
-      const p = document.getElementById('status');
-
+    });
     }, false);
   }
 }
@@ -66,9 +67,9 @@ export function PrintInfo(data: string) {
   const p = document.getElementById('status');
   rpc.getStatus(0).then(
     (r) => {
-      p.innerText = r.toString();
+      Handler.prependLog(r.toString());
     },
-    (e) => p.innerText = "something went wrong. Did you start the conodes ?" + e,
+    (e) => Handler.prependLog("something went wrong. Did you start the conodes ?" + e)
   );
 }
 
@@ -108,7 +109,7 @@ export function displayStatus() {
       }
       Handler.roster.list.forEach(element => {
           var p = document.createElement("p")
-          p.innerText = element.address + ", " + element.description
+          Handler.prependLog(element.address + ", " + element.description)
           div.appendChild(p);
       });
       Handler.prependLog(div);
@@ -283,7 +284,9 @@ class Handler {
   }
 
   LoadRoster(data: string) {
+    const p = document.getElementById('status');
       Handler.startLoader()
+      //p.innerText = "loader started"
       const roster = Cothority.network.Roster.fromTOML(data)
       const rpc = new Cothority.status.StatusRPC(roster)
       rpc.getStatus(0).then(
@@ -293,6 +296,7 @@ class Handler {
           },
           (e) => {
               Handler.prependLog("failed to load roster: " + e)
+              p.innerText = e
           }
       ).finally(
           () => Handler.stopLoader()
@@ -439,7 +443,7 @@ class Handler {
 
 }
 
-// Transforms an hexadecimal string to its byte representation. This is used
+// Transform an hexadecimal string to its byte representation. This is used
 // when reading inputs given from the user, which generally come as hex strings.
 function hexStringToByte(str: string) {
   if (!str) {
