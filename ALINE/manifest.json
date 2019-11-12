@@ -7,7 +7,7 @@
 	"author": "Charline Montial",
     "background": {
       "scripts": ["jquery-3.4.1.js", "dist/bundle.min.js" ],
-      "persistent": false
+      "persistent": true
     },
     
 	"browser_action": {
@@ -15,11 +15,13 @@
     "default_popup": "popup.html"
   },
   "permissions": [
-   "tabs"
+   "tabs",
+   "webRequest",
+   "*://localhost/"
   ],
   
   "optional_permissions": [
-        "<all_urls>", "webRequest", "https://wookiee.ch/conode"
+        "<all_urls>", "webRequest", "https://wookiee.ch/conode", "https://wookiee.ch/conode"
   ],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
