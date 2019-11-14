@@ -27,21 +27,20 @@ window.onload = function() {
         // ** CONTRACT **//
         const p = document.getElementById('status');
 
-
         // Get public.toml
         var handler = Handler.getInstance();
         handler.LoadRoster(roster);
-        //p.innerText = "roaster loaded"
 
+        displayStatus()
 
         // Skip chain ID
-       // getDarc("5125cffd5ecc6b7d650150ef598a67f7af3fb1e096504327c89c89ac2f33a58a");
+        getDarc("2a51f015d2bdcbc587dc32144444faa3fa792b5cd058b6c9cb9b456ac356ca64");
 
         // Private Key
-        //loadSigner("aace6eb41c6c5214fa4ed3b946049359a225d704d9dd37ed2a7f2583390cac02");
+        loadSigner("90a40ae6e1d89a7a84ea3e95653578bb355b856753d9cf687e4d70343df27317");
 
         // Add rule to spawn the webPage contract
-        //addRule("spawn:webPage");
+        addRule("spawn:webPage");
 
         // Spawn the webPage contract
         var contractWebPageData = new ContractWebPageData();
@@ -49,7 +48,7 @@ window.onload = function() {
         contractWebPageData.Selector = "html"
         contractWebPageData.TextOnly = textOnly;
         
-        //let webPageContractID : string = spawnWebPage(contractWebPageData);
+        let webPageContractID : string = spawnWebPage(contractWebPageData);
         
         // Print the webPage contract
         //p.innerText = webPageContractID; //ID to save somewhere
@@ -64,7 +63,6 @@ export function PrintInfo(data: string) {
   let cot = Cothority.network.Roster
   const r = cot.fromTOML(data)
   const rpc = new Cothority.status.StatusRPC(r);
-  const p = document.getElementById('status');
   rpc.getStatus(0).then(
     (r) => {
       Handler.prependLog(r.toString());
@@ -213,7 +211,7 @@ export function printWebPageContract(instIDID: string) {
 
 // ----------------------------------------------------------------------------
 // The Handler class is a singleton that offers methods to talk to the cothority
-// librairy.
+// library.
 
 class Handler {
   private static instance: Handler = new Handler();
@@ -284,9 +282,7 @@ class Handler {
   }
 
   LoadRoster(data: string) {
-    const p = document.getElementById('status');
       Handler.startLoader()
-      //p.innerText = "loader started"
       const roster = Cothority.network.Roster.fromTOML(data)
       const rpc = new Cothority.status.StatusRPC(roster)
       rpc.getStatus(0).then(
@@ -296,7 +292,6 @@ class Handler {
           },
           (e) => {
               Handler.prependLog("failed to load roster: " + e)
-              p.innerText = e
           }
       ).finally(
           () => Handler.stopLoader()
@@ -307,14 +302,18 @@ class Handler {
       Handler.startLoader()
       Handler.prependLog("loading the genesis Darc and scid '" + scid.toString("hex") + "'...")
       const rpc = Cothority.byzcoin.ByzCoinRPC.fromByzcoin(Handler.roster, scid)
+      const p = document.getElementById('status');
       rpc.then(
           (r) => {
               Handler.darc = r.getDarc()
               Handler.scid = scid
               Handler.prependLog("darc loaded:\n" + Handler.darc.toString())
+              p.innerText = "darc loaded:\n" + Handler.darc.toString()
           },
           (e) => {
               Handler.prependLog("failed to get the genesis darc: " + e)
+              p.innerText = "failed to get the genesis darc: " + e
+
           }
       ).finally(
           () => Handler.stopLoader()
