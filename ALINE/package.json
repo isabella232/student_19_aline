@@ -6,7 +6,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "webpack",
-    "protobuf": "node scripts/build_proto.js"
+    "protobuf": "node scripts/build_proto.js",
+    "watch": "webpack --watch"
   },
   "author": "",
   "license": "ISC",
