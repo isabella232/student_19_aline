@@ -34,10 +34,10 @@ window.onload = function() {
         displayStatus()
 
         // Skip chain ID
-        await getDarc("be290579edb140d6469c8a1482042ad3302ff8a0b413dd430ab6f72685331cde");
+        await getDarc("15f9cb1db66709b6189d124f8af5b999394ede7b7b3c02313790f051923aba84");
 
         // Private Key
-        loadSigner("24f173499333bba573f2fd14de0cfc89eeb34d98a79644958b4ae4fb5c224f07");
+        loadSigner("976537f17ae9a9bb3c8aa2e37b0a3ce477eac03beab5eafb25735201d2957309");
 
         // Add rule to spawn the webPage contract
         await addRule("spawn:webPage");
@@ -48,8 +48,11 @@ window.onload = function() {
         contractWebPageData.Selector = "html"
         contractWebPageData.TextOnly = textOnly;
         
-        await new Promise( resolve => setTimeout(resolve, 30000))
-        await spawnWebPage(contractWebPageData);
+        await spawnWebPage(contractWebPageData).then(
+            (r) => Handler.prependLog("instance spawned: " + r)
+        ).catch(
+            (e) => Handler.prependLog("failed to spawn web page: " + e)
+        )
         
         // Print the webPage contract
         // Handler.prependLog("WebPageContractID: " + webPageContractID); //ID to save somewhere
@@ -362,7 +365,7 @@ class Handler {
                   (webPageInstance: WebPageInstance) => {
                       // Handler.prependLog("Web page instance spawned: " + webPageInstance)
                       Handler.prependLog("Web Pageinstance spawned: \n" + webPageInstance.toString() + "\nInstance ID: " + webPageInstance.id.toString("hex"))
-                        webPageInstanceID = webPageInstance.id.toString("hex")
+                      webPageInstanceID = webPageInstance.id.toString("hex")
                     },
                   (e: Error) => {
                       console.error(e);
