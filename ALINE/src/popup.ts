@@ -17,7 +17,7 @@ window.onload = function() {
       chrome.tabs.query({
         'active': true,
         'lastFocusedWindow': true
-      }, function(tabs) {
+      }, async function(tabs) {
         url = tabs[0].url;
 
         // Retrieve TextOnly field
@@ -28,19 +28,18 @@ window.onload = function() {
         const p = document.getElementById('status');
 
         // Get public.toml
-        var handler = Handler.getInstance();
-        handler.LoadRoster(roster);
+        await Handler.getInstance().LoadRoster(roster);
 
         displayStatus()
 
         // Skip chain ID
-        getDarc("2a51f015d2bdcbc587dc32144444faa3fa792b5cd058b6c9cb9b456ac356ca64");
+        await getDarc("2a51f015d2bdcbc587dc32144444faa3fa792b5cd058b6c9cb9b456ac356ca64");
 
         // Private Key
-        loadSigner("90a40ae6e1d89a7a84ea3e95653578bb355b856753d9cf687e4d70343df27317");
+        await loadSigner("90a40ae6e1d89a7a84ea3e95653578bb355b856753d9cf687e4d70343df27317");
 
         // Add rule to spawn the webPage contract
-        addRule("spawn:webPage");
+        await addRule("spawn:webPage");
 
         // Spawn the webPage contract
         var contractWebPageData = new ContractWebPageData();
@@ -48,7 +47,8 @@ window.onload = function() {
         contractWebPageData.Selector = "html"
         contractWebPageData.TextOnly = textOnly;
         
-        let webPageContractID : string = spawnWebPage(contractWebPageData);
+        await new Promise( resolve => setTimeout(resolve, 30000))
+        let webPageContractID : string = await spawnWebPage(contractWebPageData);
         
         // Print the webPage contract
         //p.innerText = webPageContractID; //ID to save somewhere
@@ -116,75 +116,58 @@ export function displayStatus() {
   }
 }
 
-export function getDarc(scidID: string) {
+export async function getDarc(scidID: string) {
   try {
       var r: string = Handler.checkRoster();
       if (r != "") {
           Handler.prependLog(r)
           return
       }
-      const scidHolder = document.getElementById(scidID) as HTMLInputElement;
-      const scidStr =  scidHolder.value;
-      if (scidStr == "") {
-          Handler.prependLog("please enter a skipchain id")
-          return
-      }
-      Handler.getInstance().SetDarc(Buffer.from(hexStringToByte(scidStr)))
-  } catch (e) {
+      await Handler.getInstance().SetDarc(Buffer.from(hexStringToByte(scidID)))
+    } catch (e) {
       Handler.prependLog("failed to set DARC: " + e)
   }
 }
 
-export function loadSigner(iID: string) {
+export async function loadSigner(signerID: string) {
   try {
       var r: string = Handler.checkRoster() || Handler.checkDarc();
       if (r!= "") {
           Handler.prependLog(r)
           return
       }
-      const signerHolder = document.getElementById(iID) as HTMLInputElement
-      const signerStr = signerHolder.value
-      if (signerStr == "") {
-          Handler.prependLog("please provide a signer")
-          return
-      }
-
-      Handler.getInstance().SetSigner(Buffer.from(hexStringToByte(signerStr)))
+      Handler.getInstance().SetSigner(Buffer.from(hexStringToByte(signerID)))
   } catch (e) {
       Handler.prependLog("failed to set the signer: " + e)
   }
 }
 
-export function addRule(rID: string) {
+export async function addRule(ruleID: string) {
   try {
       var r: string = Handler.checkRoster() || Handler.checkDarc() || Handler.checkSigner();
       if (r != "") {
           Handler.prependLog(r)
           return
       }
-      const ruleHolder = document.getElementById(rID) as HTMLInputElement
-      const ruleStr = ruleHolder.value
-      if (ruleStr == "") {
-          Handler.prependLog("please provide a rule")
-          return
-      }
-      Handler.getInstance().AddRule(ruleStr);
+      await Handler.getInstance().AddRule(ruleID);
   } catch (e) {
       Handler.prependLog("failed to add rule on DARC: " + e)
   }
 }
 
-export function spawnWebPage(contractWebPageData : ContractWebPageData) : string {
-    let webPageContractID : string = "NO ID COULD HAVE BEEN RETRIEVED."
+export async function spawnWebPage(contractWebPageData : ContractWebPageData) : string {
   try {
       var r: string = Handler.checkRoster() || Handler.checkDarc() || Handler.checkSigner();
       if (r != "") {
           Handler.prependLog(r)
           return
       }
-      webPageContractID = Handler.getInstance().SpawnWebPage(contractWebPageData)
-      return webPageContractID
-  } catch (e) {
+      await Handler.getInstance().SpawnWebPage(contractWebPageData).then(
+        (r) => Handler.prependLog("Here is the instance ID: " + r)
+    ).catch(
+        (e) => Handler.prependLog("Failed to get the instance ID: " + e)
+    )
+    } catch (e) {
       Handler.prependLog("Failed to spawn webPage instance: " + e)
   }
 }
@@ -281,14 +264,15 @@ class Handler {
       Handler.loaderHolder.classList.remove("loading")
   }
 
-  LoadRoster(data: string) {
+  async LoadRoster(data: string) {
       Handler.startLoader()
       const roster = Cothority.network.Roster.fromTOML(data)
       const rpc = new Cothority.status.StatusRPC(roster)
-      rpc.getStatus(0).then(
+      await rpc.getStatus(0).then(
           (r) => {
               Handler.roster = roster
               Handler.prependLog("roster loaded!")
+              Handler.prependLog("Here is the content of Handler.roster: " + Handler.roster)
           },
           (e) => {
               Handler.prependLog("failed to load roster: " + e)
@@ -298,21 +282,19 @@ class Handler {
       )
   }
 
-  SetDarc(scid: Buffer) {
+  //TAKE IT FROM HERE + COMPILATION MISTAKE
+  async SetDarc(scid: Buffer) {
       Handler.startLoader()
       Handler.prependLog("loading the genesis Darc and scid '" + scid.toString("hex") + "'...")
       const rpc = Cothority.byzcoin.ByzCoinRPC.fromByzcoin(Handler.roster, scid)
-      const p = document.getElementById('status');
       rpc.then(
           (r) => {
               Handler.darc = r.getDarc()
               Handler.scid = scid
               Handler.prependLog("darc loaded:\n" + Handler.darc.toString())
-              p.innerText = "darc loaded:\n" + Handler.darc.toString()
           },
           (e) => {
               Handler.prependLog("failed to get the genesis darc: " + e)
-              p.innerText = "failed to get the genesis darc: " + e
 
           }
       ).finally(
