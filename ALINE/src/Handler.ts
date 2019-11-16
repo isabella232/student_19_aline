@@ -5,7 +5,7 @@ import {WebPageInstance, ContractWebPageData} from "./WebPageInstance";
 // The Handler class is a singleton that offers methods to talk to the cothority
 // library.
 
-class Handler {
+export class Handler {
     private static instance: Handler = new Handler();
     private static statusHolder: HTMLElement
     private static loaderHolder: HTMLElement
