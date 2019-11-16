@@ -171,7 +171,7 @@ export class Handler {
                   (webPageInstance: WebPageInstance) => {
                         // Handler.prependLog("Web page instance spawned: " + webPageInstance)
                         Handler.prependLog("Web Pageinstance spawned: \n" + webPageInstance.toString() + "\nInstance ID: " + webPageInstance.id.toString("hex"))
-                          webPageInstanceID = webPageInstance.id.toString("hex")
+                        webPageInstanceID = webPageInstance.id.toString("hex")
                       },
                     (e: Error) => {
                         console.error(e);

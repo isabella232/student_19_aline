@@ -49,7 +49,11 @@ window.onload = function() {
         contractWebPageData.TextOnly = textOnly;
         
         await new Promise( resolve => setTimeout(resolve, 30000))
-        await spawnWebPage(contractWebPageData);
+        await spawnWebPage(contractWebPageData).then(
+            (r) => Handler.prependLog("instance spawned: " + r)
+        ).catch(
+            (e) => Handler.prependLog("failed to spawn web page: " + e)
+        )        
         //let webPageContractID : string = await spawnWebPage(contractWebPageData);
         
         // Print the webPage contract

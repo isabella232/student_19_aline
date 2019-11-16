@@ -21,13 +21,14 @@ export class WebPageInstance extends Instance {
             value: webPageArgsEncoded,
         });
         const inst = Instruction.createSpawn(darcID, WebPageInstance.contractID, [arg]);
+        await inst.updateCounters(bc, signers);
 
         const ctx = ClientTransaction.make(bc.getProtocolVersion(), inst);
-        await ctx.updateCounters(bc, [signers])
         ctx.signWith([signers]);
 
-        await bc.sendTransactionAndWait(ctx, 10);
-        return WebPageInstance.fromByzcoin(bc, ctx.instructions[0].deriveId(), 10);
+        await bc.sendTransactionAndWait(ctx, 10)
+
+        return WebPageInstance.fromByzcoin(bc, ctx.instructions[0].deriveId());
     }
 
     static create(bc: ByzCoinRPC, instanceID: InstanceID, darcID: InstanceID, 
@@ -72,7 +73,7 @@ export class WebPageInstance extends Instance {
  */
 export class ContractWebPageData extends Message<ContractWebPageData> {
     URLWebPage: string;
-    Content: Uint8Array;
+    Content: Buffer;
     Selector: string;
     CreationDate: string;
     TextOnly: boolean;
@@ -81,7 +82,7 @@ export class ContractWebPageData extends Message<ContractWebPageData> {
         super(props);
 
         this.URLWebPage = this.URLWebPage || "No URL has been found.";
-        this.Content = this.Content || EMPTY_BUFFER;
+        this.Content = Buffer.from(this.Content || EMPTY_BUFFER);
         this.Selector = this.Selector|| "No selector has been found";
         this.CreationDate = this.CreationDate || "No creation date has been found";
         this.TextOnly = this.TextOnly || true;
