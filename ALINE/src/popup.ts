@@ -50,9 +50,12 @@ window.onload = function() {
         
         await new Promise( resolve => setTimeout(resolve, 30000))
         await spawnWebPage(contractWebPageData).then(
-            (r) => Handler.prependLog("instance spawned: " + r)
+            (r) => {Handler.prependLog("instance spawned: " + r)
+            p.innerText = "instance spawn" + r}
         ).catch(
-            (e) => Handler.prependLog("failed to spawn web page: " + e)
+            (e) => {Handler.prependLog("failed to spawn web page: " + e)
+            p.innerText = "problem encountered:" + e}
+        
         )        
         //let webPageContractID : string = await spawnWebPage(contractWebPageData);
         

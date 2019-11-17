@@ -1,6 +1,7 @@
 import * as Cothority from "@dedis/cothority";
 import {ContractWebPageData} from "./WebPageInstance";
 import  {Handler} from "./Handler";
+
 // ----------------------------------------------------------------------------
 // The following functions are called from the view and responsible for parsing
 // the arguments and then calling the appropriate method on the Handler class.
