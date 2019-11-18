@@ -70,25 +70,17 @@ window.onload = function() {
   var checkPageButton = document.getElementById('pagesection');
   if (checkPageButton) {
     checkPageButton.addEventListener('click', function() {
+    
+        var message = document.getElementById('message');
 
-        // Retrieve CSS Selector by loading Selector Gadget
-        var s = document.createElement('div');
-        s.innerHTML='Loading...';
-        s.style.color='black';
-        s.style.padding='20px';
-        s.style.position='fixed';
-        s.style.zIndex='9999';
-        s.style.fontSize='3.0em';
-        s.style.border='2px solid black';
-        s.style.right='40px';
-        s.style.top='40px';
-        s.setAttribute('class','selector_gadget_loading');
-        s.style.background='white';
-        document.body.appendChild(s);
-        var t = document.createElement('script');
-        t.setAttribute('type','text/javascript');
-        t.setAttribute('src','./scripts/css_selector_scripts/selectorGadget.js');
-        document.body.appendChild(t);
+        chrome.tabs.executeScript(null, {
+          file: "./scripts/css_selector_scripts/startSelectorGadget.js"
+        }, function() {
+          // If you try and inject into an extensions page or the webstore/NTP you'll get an error
+          if (chrome.runtime.lastError) {
+            message.innerText = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
+          }
+        });
 
     // Retrieve current URL  
       chrome.tabs.query({
