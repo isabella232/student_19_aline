@@ -23,7 +23,7 @@ export function initRoster(e: Event) {
     }
   }
   
-  export function displayStatus() {
+  export async function displayStatus() {
     try {
         var r: string;
         if ((r = Handler.checkRoster()) != "") {
@@ -67,7 +67,7 @@ export function initRoster(e: Event) {
             Handler.prependLog(r)
             return
         }
-        Handler.getInstance().SetSigner(Buffer.from(hexStringToByte(signerID)))
+        await Handler.getInstance().SetSigner(Buffer.from(hexStringToByte(signerID)))
     } catch (e) {
         Handler.prependLog("failed to set the signer: " + e)
     }
