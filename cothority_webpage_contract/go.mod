@@ -12,6 +12,7 @@ require (
 	go.dedis.ch/onet/v3 v3.0.26
 	go.dedis.ch/protobuf v1.0.10
 	golang.org/x/crypto v0.0.0-20191011191535-87dc89f01550
+	golang.org/x/xerrors v0.0.0-20190717185122-a985d3407aa7
 	gopkg.in/urfave/cli.v1 v1.20.0
 )
 
