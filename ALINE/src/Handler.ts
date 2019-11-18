@@ -100,9 +100,13 @@ export class Handler {
                 Handler.darc = r.getDarc()
                 Handler.scid = scid
                 Handler.prependLog("darc loaded:\n" + Handler.darc.toString())
+                const p = document.getElementById('status');
+                p.innerText = "darc loaded:\n" + Handler.darc.toString();
             },
             (e) => {
-                Handler.prependLog("failed to get the genesis darc: " + e)
+                Handler.prependLog("failed to get the genesis darc unfortunately: " + e)
+                const p = document.getElementById('status');
+                p.innerText = e;
   
             }
         ).finally(

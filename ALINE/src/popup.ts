@@ -71,19 +71,6 @@ window.onload = function() {
   if (checkPageButton) {
     checkPageButton.addEventListener('click', function() {
 
-    // Retrieve current URL  
-      chrome.tabs.query({
-        'active': true,
-        'lastFocusedWindow': true
-      }, async function(tabs) {
-
-        // Retrieve URL
-        url = tabs[0].url;
-
-        // Retrieve TextOnly field
-        const textOnlyBox = document.getElementById('txtOnly') as HTMLInputElement;
-        var textOnly = textOnlyBox.checked
-
         // Retrieve CSS Selector by loading Selector Gadget
         var s = document.createElement('div');
         s.innerHTML='Loading...';
@@ -102,6 +89,20 @@ window.onload = function() {
         t.setAttribute('type','text/javascript');
         t.setAttribute('src','./scripts/css_selector_scripts/selectorGadget.js');
         document.body.appendChild(t);
+
+    // Retrieve current URL  
+      chrome.tabs.query({
+        'active': true,
+        'lastFocusedWindow': true
+      }, async function(tabs) {
+
+        // Retrieve URL
+        url = tabs[0].url;
+
+        // Retrieve TextOnly field
+        const textOnlyBox = document.getElementById('txtOnly') as HTMLInputElement;
+        var textOnly = textOnlyBox.checked
+
 
         /*
         // ** SPAWN CONTRACT ** //

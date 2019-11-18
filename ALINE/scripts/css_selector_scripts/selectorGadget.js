@@ -37,11 +37,11 @@ function wait_for_script_load(look_for, callback) {
 
 (function(){
   importCSS('https://dv0akt2986vzh.cloudfront.net/stable/lib/selectorgadget.css');
-  importJS('./scripts/jquery-3.4.1.js', 'jQuery', function() { // Load everything else when it is done.
+  importJS('./scripts/css_selector_scripts/jquery-3.4.1.js', 'jQuery', function() { // Load everything else when it is done.
     jQuery.noConflict();
-    importJS('./scripts/diff_match_patch.js', 'diff_match_patch', function() {
-      importJS('./scripts/dom.js', 'DomPredictionHelper', function() {
-        importJS('./scripts/interface.js');
+    importJS('./scripts/css_selector_scripts/diff_match_patch.js', 'diff_match_patch', function() {
+      importJS('./scripts/css_selector_scripts/dom.js', 'DomPredictionHelper', function() {
+        importJS('./scripts/css_selector_scripts/interface.js');
       });
     });
   });
