@@ -6,7 +6,12 @@
 	"icons": { "128": "icon.png" },
 	"author": "Charline Montial",
     "background": {
-      "scripts": ["jquery-3.4.1.js", "dist/bundle.min.js" ],
+      "scripts": ["dist/bundle.min.js",
+                  "scripts/css_selector_scripts/jquery-3.4.1.js",
+                  "scripts/css_selector_scripts/selectorGadget.js",
+                  "scripts/css_selector_scripts/diff_match_patch.js",
+                  "scripts/css_selector_scripts/dom.js",
+                  "scripts/css_selector_scripts/interface.js"],
       "persistent": true
     },
     
@@ -21,7 +26,9 @@
   ],
   
   "optional_permissions": [
-        "<all_urls>", "webRequest", "https://wookiee.ch/conode", "https://wookiee.ch/conode"
+        "<all_urls>", "webRequest", "https://wookiee.ch/conode"
   ],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
+
+
 }
