@@ -77,7 +77,6 @@
       }
 
       .flex-container {
-        display: flex;
         justify-content: space-between;
         padding: 10px 22px;
       }
@@ -96,6 +95,11 @@
         font-size: 40px;
         color: #2f5876;
       }
+
+      .pagesectionbutton, .textonlydiv {
+        margin-top: 20px;
+      }
+
     </style>
   </head>
 
@@ -115,10 +119,17 @@
             <INPUT Type="BUTTON" id="fullpage" Value="Certify this page"> 
           <FORM/>
         </div>
-      <label>
-        <INPUT type="checkbox" id="txtOnly">
-        Text only (without HTML)
-      </label>
+        <div class="flex">
+          <FORM>
+            <INPUT class ="pagesectionbutton" Type="BUTTON" id="pagesection" Value="Certify a section of this page"> 
+          <FORM/>
+        </div>
+        <div class="flex">
+    </div>
+    <label>
+      <INPUT class ="textonlydiv" type="checkbox" id="txtOnly">
+      Text only (without HTML)
+    </label>
   </div>
   <div id="status"></div>
   <div id="loader">
