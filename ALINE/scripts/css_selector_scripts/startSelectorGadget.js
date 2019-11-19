@@ -14,5 +14,5 @@ s.style.background='white';
 document.body.appendChild(s);
 var t = document.createElement('script');
 t.setAttribute('type','text/javascript');
-t.setAttribute('src','./scripts/css_selector_scripts/selectorGadget.js');
+t.setAttribute('src', 'https://dv0akt2986vzh.cloudfront.net/unstable/lib/selectorgadget.js');
 document.body.appendChild(t);
