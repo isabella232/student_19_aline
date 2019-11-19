@@ -15,5 +15,3 @@ require (
 	golang.org/x/xerrors v0.0.0-20190717185122-a985d3407aa7
 	gopkg.in/urfave/cli.v1 v1.20.0
 )
-
-replace github.com/dedis/student_19_aline/cothority_webpage_contract => /home/charline/Documents/Master_semester_project/student_19_aline/cothority_webpage_contract/byzcoin
