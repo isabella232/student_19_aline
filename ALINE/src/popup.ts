@@ -9,9 +9,9 @@ export {
 };
 
 window.onload = function() {
-
-    var skipChainID = "2a51f015d2bdcbc587dc32144444faa3fa792b5cd058b6c9cb9b456ac356ca64";
-    var privateKey = "2a51f015d2bdcbc587dc32144444faa3fa792b5cd058b6c9cb9b456ac356ca64";
+2
+    var skipChainID = "0191ff647ab0d73bc2b5798077f1b43b6c032435d412a29e8fc24c958d995bf8";
+    var privateKey = "d7ef534d6bc30fd84903e11d15a1d091b17c9f307a20fef1e83bb6fadd1e6404";
     var url;
 
     // CERTIFY WHOLE PAGE
@@ -70,9 +70,9 @@ window.onload = function() {
   var checkPageButton = document.getElementById('pagesection');
   if (checkPageButton) {
     checkPageButton.addEventListener('click', function() {
-    
+        
         var message = document.getElementById('message');
-
+        
         chrome.tabs.executeScript(null, {
           file: "./scripts/css_selector_scripts/startSelectorGadget.js"
         }, function() {
