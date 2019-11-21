@@ -7,12 +7,8 @@
 	"author": "Charline Montial",
     "background": {
       "scripts": ["dist/bundle.min.js",
-                  "scripts/css_selector_scripts/jquery-3.4.1.js",
-                  "scripts/css_selector_scripts/startSelectorGadget.js",
-                  "scripts/css_selector_scripts/selectorGadget.js",
-                  "scripts/css_selector_scripts/diff_match_patch.js",
-                  "scripts/css_selector_scripts/dom.js",
-                  "scripts/css_selector_scripts/interface.js"],
+                  "scripts/jquery-3.4.1.js",
+                  "scripts/startSelectorGadget.js"],
       "persistent": true
     },
     
