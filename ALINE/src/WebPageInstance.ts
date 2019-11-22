@@ -28,7 +28,7 @@ export class WebPageInstance extends Instance {
 
         await bc.sendTransactionAndWait(ctx, 10)
 
-        return WebPageInstance.fromByzcoin(bc, ctx.instructions[0].deriveId());
+        return WebPageInstance.fromByzcoin(bc, ctx.instructions[0].deriveId(), 10);
     }
 
     static create(bc: ByzCoinRPC, instanceID: InstanceID, darcID: InstanceID, 
