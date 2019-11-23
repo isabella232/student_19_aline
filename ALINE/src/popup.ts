@@ -4,17 +4,60 @@ import {Handler} from "./Handler";
 import {WebPageInstance, ContractWebPageData} from "./WebPageInstance";
 import {roster} from "./roster"
 
+//TODO: Modularize spawn contract inbetween the two features that certify something
 export {
   Cothority
 };
 
 window.onload = function() {
-2
     var skipChainID = "0191ff647ab0d73bc2b5798077f1b43b6c032435d412a29e8fc24c958d995bf8";
     var privateKey = "d7ef534d6bc30fd84903e11d15a1d091b17c9f307a20fef1e83bb6fadd1e6404";
     var url;
 
-    // CERTIFY WHOLE PAGE
+    chrome.tabs.executeScript(null, {
+      file: "./scripts/findCSSSelector.js"
+    }, function() {
+      // If you try and inject into an extensions page or the webstore/NTP you'll get an error
+      if (chrome.runtime.lastError) {
+        Handler.prependLog("Error in script : \n" + chrome.runtime.lastError.message);
+      }
+    });
+
+    var files = [
+      './scripts/jquery-3.4.1.js.js',
+      './scripts/closeSelectorGadget.js',
+  ];
+        for (var file of files) {
+          chrome.tabs.executeScript({
+              file: file,
+              allFrames: true,
+          });
+      }
+
+ 
+
+    // Check if user is reloading the app to certify a section of the webpage
+    /*if ((<HTMLInputElement>document.getElementById('_sg_path_field')).value!== null){
+      alert("We may be good !")
+
+      // Retrieve current URL  
+      chrome.tabs.query({
+        'active': true,
+        'lastFocusedWindow': true
+      }, async function(tabs) {
+        url = tabs[0].url;
+  
+        // Retrieve TextOnly field
+        const textOnlyBox = document.getElementById('txtOnly') as HTMLInputElement;
+        var textOnly = textOnlyBox.checked
+
+    });
+    } else {
+      const p = document.getElementById('status')
+      p.innerText = "nothing found";
+    }
+*/
+    // Certify the whole page
     var checkPageButton = document.getElementById('fullpage');
     if (checkPageButton) {
         checkPageButton.addEventListener('click', function() {
@@ -66,19 +109,19 @@ window.onload = function() {
     }, false);
   }
 
-  // CERTIFY PAGE SECTION
+  // certify page section
   var checkPageButton = document.getElementById('pagesection');
   if (checkPageButton) {
     checkPageButton.addEventListener('click', function() {
         
-        var message = document.getElementById('message');
-        
+        alert("Please select the desired section of the webpage, then click on the extension icon again.\n")
+
         chrome.tabs.executeScript(null, {
-          file: "./scripts/css_selector_scripts/startSelectorGadget.js"
+          file: "./scripts/startSelectorGadget.js"
         }, function() {
           // If you try and inject into an extensions page or the webstore/NTP you'll get an error
           if (chrome.runtime.lastError) {
-            message.innerText = 'There was an error injecting script : \n' + chrome.runtime.lastError.message;
+            Handler.prependLog("There was an error injecting script : \n" + chrome.runtime.lastError.message);
           }
         });
 
@@ -87,14 +130,6 @@ window.onload = function() {
         'active': true,
         'lastFocusedWindow': true
       }, async function(tabs) {
-
-        // Retrieve URL
-        url = tabs[0].url;
-
-        // Retrieve TextOnly field
-        const textOnlyBox = document.getElementById('txtOnly') as HTMLInputElement;
-        var textOnly = textOnlyBox.checked
-
 
         /*
         // ** SPAWN CONTRACT ** //
