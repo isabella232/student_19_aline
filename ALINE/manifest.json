@@ -8,7 +8,9 @@
     "background": {
       "scripts": ["dist/bundle.min.js",
                   "scripts/jquery-3.4.1.js",
-                  "scripts/startSelectorGadget.js"],
+                  "scripts/startSelectorGadget.js",
+                  "scripts/findCSSSelector.js",
+                  "scripts/closeSelectorGadget.js"],
       "persistent": true
     },
     
