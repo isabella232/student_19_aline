@@ -1,4 +1,4 @@
-// Retrieve CSS Selector by loading Selector Gadget
+// Load Selector Gadget
 var s = document.createElement('div');
 s.innerHTML='Loading...';
 s.style.color='black';
