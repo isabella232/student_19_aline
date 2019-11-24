@@ -94,12 +94,12 @@ export async function spawnWebPage(contractWebPageData: ContractWebPageData) {
       return
     }
     await Handler.getInstance().SpawnWebPage(contractWebPageData).then(
-      (r) => Handler.prependLog("Here is the instance ID: " + r)
+      (r) => console.log("Here is the instance ID: " + r)
     ).catch(
-      (e) => Handler.prependLog("Failed to get the instance ID: " + e)
+      (e) => console.log("Failed to get the instance ID: " + e)
     )
   } catch (e) {
-    Handler.prependLog("Failed to spawn webPage instance: " + e)
+    console.log("Failed to spawn webPage instance: " + e)
   }
 }
 
