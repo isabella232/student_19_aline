@@ -1,4 +1,4 @@
-// Retrieve CSS Selector in input form
+// Retrieve CSS Selector in input form if SelectorGadget is Running
     var isSelectorGadgetRunning = (document.getElementById('_sg_path_field') !== null);
     var selector;
     if(isSelectorGadgetRunning){
