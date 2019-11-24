@@ -80,11 +80,11 @@ export class Handler {
         await rpc.getStatus(0).then(
             (r) => {
                 Handler.roster = roster
-                Handler.prependLog("roster loaded!")
-                Handler.prependLog("Here is the content of Handler.roster: " + Handler.roster)
+                console.log("roster loaded!")
+                console.log("Here is the content of Handler.roster: " + Handler.roster)
             },
             (e) => {
-                Handler.prependLog("failed to load roster: " + e)
+                console.log("failed to load roster: " + e)
             }
         ).finally(
             () => Handler.stopLoader()
@@ -93,21 +93,16 @@ export class Handler {
   
     async SetDarc(scid: Buffer) {
         Handler.startLoader()
-        Handler.prependLog("loading the genesis Darc and scid '" + scid.toString("hex") + "'...")
+        console.log("loading the genesis Darc and scid '" + scid.toString("hex") + "'...")
         const rpc = Cothority.byzcoin.ByzCoinRPC.fromByzcoin(Handler.roster, scid)
         await rpc.then(
             (r) => {
                 Handler.darc = r.getDarc()
                 Handler.scid = scid
-                Handler.prependLog("darc loaded:\n" + Handler.darc.toString())
-                const p = document.getElementById('status');
-                p.innerText = "darc loaded:\n" + Handler.darc.toString();
+                console.log("darc loaded:\n" + Handler.darc.toString())
             },
             (e) => {
-                Handler.prependLog("failed to get the genesis darc unfortunately: " + e)
-                const p = document.getElementById('status');
-                p.innerText = e;
-  
+                console.log("failed to get the genesis darc: " + e)
             }
         ).finally(
             () => Handler.stopLoader()
@@ -115,36 +110,36 @@ export class Handler {
     }
   
     SetSigner(sid: Buffer) {
-        Handler.prependLog("setting the signer with: '" + sid.toString("hex") + "'...")
+        console.log("setting the signer with: '" + sid.toString("hex") + "'...")
         try {
             var signer = Cothority.darc.SignerEd25519.fromBytes(sid)
             Handler.signer = signer
         } catch(e) {
-            Handler.prependLog("failed to create signer: " + e)
+            console.log("failed to create signer: " + e)
         }
-        Handler.prependLog("signer '" + signer.toString() + "' set")
+        console.log("signer '" + signer.toString() + "' set")
     }
   
     async AddRule(ruleStr: string) {
         Handler.startLoader();
-        Handler.prependLog("setting the rules " + ruleStr + "...")
+        console.log("setting the rules " + ruleStr + "...")
         const rpc = Cothority.byzcoin.ByzCoinRPC.fromByzcoin(Handler.roster, Handler.scid)
         await rpc.then(
           async (r) => {
                 var darc = r.getDarc()
   
-                Handler.prependLog("RPC created, getting the darc...")
+                console.log("RPC created, getting the darc...")
                 await Cothority.contracts.darc.DarcInstance.fromByzcoin(r, darc.getBaseID()).then(
                   async (darcInstance) => {
                         const evolveDarc = darc.evolve();
                         evolveDarc.addIdentity(ruleStr, Handler.signer, Cothority.darc.Rule.OR)
-                        Handler.prependLog("rule '" + ruleStr + "' added on temporary darc...")
+                        console.log("rule '" + ruleStr + "' added on temporary darc...")
                         await darcInstance.evolveDarcAndWait(evolveDarc, [Handler.signer], 10).then(
                           (evolvedDarcInstance) => {
-                                Handler.prependLog("darc instance evolved:\n" + evolvedDarcInstance.darc.toString())
+                            console.log("darc instance evolved:\n" + evolvedDarcInstance.darc.toString())
                             },
                             (e) => {
-                                Handler.prependLog("failed to evolve the darc instance: " + e)
+                                console.log("failed to evolve the darc instance: " + e)
                             }
                         ).finally(
                             () => Handler.stopLoader()
@@ -152,34 +147,33 @@ export class Handler {
                     },
                     (e) => {
                         Handler.stopLoader()
-                        Handler.prependLog("failed to get the darc instance")
+                        console.log("failed to get the darc instance")
                     }
                 )
             },
             (e) => {
                 Handler.stopLoader()
-                Handler.prependLog("failed to create RPC: " + e)
+                console.log("failed to create RPC: " + e)
             }
         )
     }
   
     async SpawnWebPage(contractWebPageData: ContractWebPageData) {
         Handler.startLoader()
-        Handler.prependLog("creating an RPC to spawn a new web page instance...")
+        console.log("creating an RPC to spawn a new web page instance...")
         const rpc = Cothority.byzcoin.ByzCoinRPC.fromByzcoin(Handler.roster, Handler.scid)
         let webPageInstanceID : string = "NO ID COULD HAVE BEEN RETRIEVED."
         return await rpc.then(
           async (r) => {
-                Handler.prependLog("RPC created, we now send a spawn:webPage request...")
+            console.log("RPC created, we now send a spawn:webPage request...")
                 await WebPageInstance.spawn(r, Handler.darc.getBaseID(), [Handler.signer], "webPageArgs", Buffer.from(ContractWebPageData.encode(contractWebPageData).finish())).then(
                   (webPageInstance: WebPageInstance) => {
-                        // Handler.prependLog("Web page instance spawned: " + webPageInstance)
-                        Handler.prependLog("Web Pageinstance spawned: \n" + webPageInstance.toString() + "\nInstance ID: " + webPageInstance.id.toString("hex"))
+                        console.log("Web Pageinstance spawned: \n" + webPageInstance.toString() + "\nInstance ID: " + webPageInstance.id.toString("hex"))
                         webPageInstanceID = webPageInstance.id.toString("hex")
                       },
                     (e: Error) => {
                         console.error(e);
-                        Handler.prependLog("failed to spawn the web page instance: " + e)
+                        console.log("failed to spawn the web page instance: " + e)
                         Promise.reject(e)
                       }
                 ).finally(
@@ -191,7 +185,7 @@ export class Handler {
             },
             (e) => {
                 Handler.stopLoader()
-                Handler.prependLog("failed to create RPC: " + e)
+                console.log("failed to create RPC: " + e)
                 Promise.reject(e)
               }
         )
@@ -200,30 +194,30 @@ export class Handler {
   
     PrintWebPage(instIDStr: Buffer) {
         Handler.startLoader()
-        Handler.prependLog("creating an RPC to get the web page instance...")
+        console.log("creating an RPC to get the web page instance...")
         const rpc = Cothority.byzcoin.ByzCoinRPC.fromByzcoin(Handler.roster, Handler.scid)
         rpc.then(
             (r) => {
-                Handler.prependLog("RPC created, we now send a get proof request...")
+                console.log("RPC created, we now send a get proof request...")
                 r.getProofFromLatest(instIDStr).then(
                     (proof) => {
-                        Handler.prependLog("got the proof, let's check it...")
+                        console.log("got the proof, let's check it...")
                         if (!proof.exists(instIDStr)) {
-                            Handler.prependLog("this is not a proof of existence... aborting!")
+                            console.log("this is not a proof of existence... aborting!")
                             return
                         }
                         if (!proof.matchContract(WebPageInstance.contractID)) {
-                            Handler.prependLog("this is not a proof for the webPage contrac... aborting!")
+                            console.log("this is not a proof for the webPage contrac... aborting!")
                             return
                         }
-                        Handler.prependLog("ok, now let's decode it...")
+                        console.log("ok, now let's decode it...")
                         var contractWebPageData = ContractWebPageData.decode(proof.value);
                         console.log(contractWebPageData)
-                        Handler.prependLog("here is the web page instance: \n" + contractWebPageData.toString())
+                        Handler.prependLog("Here is the web page instance: \n" + contractWebPageData.toString())
                     },
                     (e) => {
                         console.error(e)
-                        Handler.prependLog("failed to get the contract web page instance: " + e)
+                        Handler.prependLog("Failed to get the contract web page instance: " + e)
                     }
                 ).finally(
                     () => Handler.stopLoader()
@@ -231,7 +225,7 @@ export class Handler {
             },
             (e) => {
                 Handler.stopLoader()
-                Handler.prependLog("failed to create RPC: " + e)
+                console.log("failed to create RPC: " + e)
             }
         )
     }

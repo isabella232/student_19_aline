@@ -19,7 +19,7 @@ export function initRoster(e: Event) {
     // Needed so that we can reload a same file multiple times
     target.value = "";
   } catch (e) {
-    Handler.prependLog("failed to initialize the roster: " + e)
+    console.log("failed to initialize the roster: " + e)
   }
 }
 
@@ -27,23 +27,23 @@ export async function displayStatus() {
   try {
     var r: string;
     if ((r = Handler.checkRoster()) != "") {
-      Handler.prependLog(r)
+      console.log(r)
       return
     }
     var handler = Handler.getInstance();
     const div = document.createElement("div")
     if (Handler.roster === undefined) {
-      Handler.prependLog("handler has not been initialized");
+      console.log("handler has not been initialized");
       return
     }
     Handler.roster.list.forEach(element => {
       var p = document.createElement("p")
-      Handler.prependLog(element.address + ", " + element.description)
+      console.log(element.address + ", " + element.description)
       div.appendChild(p);
     });
-    Handler.prependLog(div);
+    console.log(div);
   } catch (e) {
-    Handler.prependLog("failed to display status: " + e)
+    console.log("failed to display status: " + e)
   }
 }
 
@@ -51,12 +51,12 @@ export async function getDarc(scidID: string) {
   try {
     var r: string = Handler.checkRoster();
     if (r != "") {
-      Handler.prependLog(r)
+      console.log(r)
       return
     }
     await Handler.getInstance().SetDarc(Buffer.from(hexStringToByte(scidID)))
   } catch (e) {
-    Handler.prependLog("failed to set DARC: " + e)
+    console.log("failed to set DARC: " + e)
   }
 }
 
@@ -64,12 +64,12 @@ export async function loadSigner(signerID: string) {
   try {
     var r: string = Handler.checkRoster() || Handler.checkDarc();
     if (r != "") {
-      Handler.prependLog(r)
+      console.log(r)
       return
     }
     await Handler.getInstance().SetSigner(Buffer.from(hexStringToByte(signerID)))
   } catch (e) {
-    Handler.prependLog("failed to set the signer: " + e)
+    console.log("failed to set the signer: " + e)
   }
 }
 
@@ -77,12 +77,12 @@ export async function addRule(ruleID: string) {
   try {
     var r: string = Handler.checkRoster() || Handler.checkDarc() || Handler.checkSigner();
     if (r != "") {
-      Handler.prependLog(r)
+      console.log(r)
       return
     }
     await Handler.getInstance().AddRule(ruleID);
   } catch (e) {
-    Handler.prependLog("failed to add rule on DARC: " + e)
+    console.log("failed to add rule on DARC: " + e)
   }
 }
 
@@ -90,7 +90,7 @@ export async function spawnWebPage(contractWebPageData: ContractWebPageData) {
   try {
     var r: string = Handler.checkRoster() || Handler.checkDarc() || Handler.checkSigner();
     if (r != "") {
-      Handler.prependLog(r)
+      console.log(r)
       return
     }
     await Handler.getInstance().SpawnWebPage(contractWebPageData).then(
@@ -107,7 +107,7 @@ export function printWebPageContract(instIDID: string) {
   try {
     var r: string = Handler.checkRoster() || Handler.checkDarc() || Handler.checkSigner();
     if (r != "") {
-      Handler.prependLog(r)
+      console.log(r)
       return
     }
     const instIDHolder = document.getElementById(instIDID) as HTMLInputElement
@@ -131,9 +131,9 @@ export function PrintInfo(data: string) {
   const rpc = new Cothority.status.StatusRPC(r);
   rpc.getStatus(0).then(
     (r) => {
-      Handler.prependLog(r.toString());
+      console.log(r.toString());
     },
-    (e) => Handler.prependLog("something went wrong. Did you start the conodes ?" + e)
+    (e) => console.log("something went wrong. Did you start the conodes ?" + e)
   );
 }
 

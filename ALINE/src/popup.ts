@@ -37,7 +37,7 @@ window.onload = function () {
       }, function () {
 
         if (chrome.runtime.lastError) {
-          Handler.prependLog("There was an error injecting script : \n" + chrome.runtime.lastError.message);
+          console.log("There was an error injecting script : \n" + chrome.runtime.lastError.message);
         }
       });
     }, false);
@@ -50,7 +50,7 @@ window.onload = function () {
     file: "./scripts/findCSSSelector.js"
   }, function () {
     if (chrome.runtime.lastError) {
-      Handler.prependLog("Error in script : \n" + chrome.runtime.lastError.message);
+      console.log("Error in script : \n" + chrome.runtime.lastError.message);
     }
   });
 
@@ -122,9 +122,9 @@ async function spawnWebPageContractWithParameters(selector: string) {
     //TODO: Try to lower timeout
     await new Promise(resolve => setTimeout(resolve, 3000))
     await spawnWebPage(contractWebPageData).then(
-      (r) => Handler.prependLog("instance spawned: " + r)
+      (r) => console.log("instance spawned: " + r)
     ).catch(
-      (e) => Handler.prependLog("failed to spawn web page: " + e)
+      (e) => console.log("failed to spawn web page: " + e)
     )
   });
 }
