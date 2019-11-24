@@ -96,8 +96,12 @@
         color: #2f5876;
       }
 
-      .pagesectionbutton, .textonlydiv {
+      .pagesectionbutton, .textonlydiv , .statusclass {
         margin-top: 20px;
+      }
+
+      .statusclass {
+        font-size: 16px;
       }
 
     </style>
@@ -130,8 +134,8 @@
       <INPUT class ="textonlydiv" type="checkbox" id="txtOnly">
       Text only (without HTML)
     </label>
+    <div class ="statusclass" id="status"></div>
   </div>
-  <div id="status"></div>
   <div id="loader"></div>
   <div id='message'></div>
   </body>
