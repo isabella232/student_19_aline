@@ -1,7 +1,7 @@
 import * as Cothority from "@dedis/cothority";
-import { displayStatus, getDarc, loadSigner, addRule, spawnWebPage, printWebPageContract } from "./Utilities";
+import { getDarc, loadSigner, addRule, spawnWebPage} from "./Utilities";
+import { ContractWebPageData } from "./WebPageInstance";
 import { Handler } from "./Handler";
-import { WebPageInstance, ContractWebPageData } from "./WebPageInstance";
 import { roster } from "./roster"
 
 //TODO: Modularize spawn contract inbetween the two features that certify something
@@ -26,9 +26,21 @@ window.onload = function () {
     }
   });
 
+  var pageSectionSelector : string;
+  var isSelectorGadgetRunning;
+  // Check if Selector Gadget is running. If yes, also grab the selector
+  chrome.extension.onRequest.addListener(function(request, sender, sendResponse) {
+    if (sender.tab)
+    pageSectionSelector = request.CSSSelector
+    const p = document.getElementById('status');
+    p.innerText = pageSectionSelector;
+  });
+
+  //const p = document.getElementById('status');
+  //p.innerText = pageSectionSelector;
   // If yes, after we retrieve the CSS selector, we close Selector Gadget
   var files = [
-    './scripts/jquery-3.4.1.js.js',
+    './scripts/jquery-3.4.1.js',
     './scripts/closeSelectorGadget.js',
   ];
 
