@@ -85,6 +85,9 @@ window.onload = function () {
  |  Spawn contract with correct parameters
  *-------------------------------------------------------------------*/
 async function spawnWebPageContractWithParameters(selector: string) {
+  
+  document.getElementById('status').innerText = "Loading ..."
+
   // Retrieve current URL  
   chrome.tabs.query({
     'active': true,
