@@ -4,7 +4,7 @@ import { ContractWebPageData } from "./WebPageInstance";
 import { Handler } from "./Handler";
 import { roster } from "./roster";
 
-//TODO: if all good, check if all features work correctly
+//TODO: After loading, simply displaying that the contract has been successfully created with button appearing
 export {
   Cothority
 };
@@ -79,13 +79,35 @@ window.onload = function () {
     spawnWebPageContractWithParameters(pageSectionSelector);
 
   });
+
+  /*---------------------------------------------------------------------
+ |  Download contract data
+ *-------------------------------------------------------------------*/
+
+  // Check if button to download the content of the webpage is pressed
+  var checkDownloadContentButton = document.getElementById('downloadcontent');
+  if (checkDownloadContentButton) {
+    checkDownloadContentButton.addEventListener('click', function () {
+      // TODO: Implement this feature !
+      alert("I am ready !")
+    }, false);
+  }
+
+  // Check if button to download the content of the webpage is pressed
+  var checkDownloadInfosButton = document.getElementById('downloadinfos');
+  if (checkDownloadInfosButton) {
+    checkDownloadInfosButton.addEventListener('click', function () {
+      // TODO: Implement this feature !
+      alert("Me tooo !");
+    }, false);
+  }
 }
 
 /*---------------------------------------------------------------------
  |  Spawn contract with correct parameters
  *-------------------------------------------------------------------*/
 async function spawnWebPageContractWithParameters(selector: string) {
-  
+
   document.getElementById('status').innerText = "Loading ..."
 
   // Retrieve current URL  
@@ -123,11 +145,17 @@ async function spawnWebPageContractWithParameters(selector: string) {
     contractWebPageData.TextOnly = textOnly;
 
     //TODO: Try to lower timeout
-    await new Promise(resolve => setTimeout(resolve, 3000))
+    await new Promise(resolve => setTimeout(resolve, 100))
     await spawnWebPage(contractWebPageData).then(
-      (r) => console.log("instance spawned: " + r)
+      (r) => {
+        console.log("instance spawned: " + r)
+        document.getElementById("downloadcontent").style.visibility = "visible";
+        document.getElementById("downloadinfos").style.visibility = "visible";
+        document.getElementById('status').innerText = "Your contract has been successfully created !"
+      }
     ).catch(
       (e) => console.log("failed to spawn web page: " + e)
     )
+
   });
 }

@@ -168,7 +168,7 @@ export class Handler {
             console.log("RPC created, we now send a spawn:webPage request...")
                 await WebPageInstance.spawn(r, Handler.darc.getBaseID(), [Handler.signer], "webPageArgs", Buffer.from(ContractWebPageData.encode(contractWebPageData).finish())).then(
                   (webPageInstance: WebPageInstance) => {
-                        document.getElementById('status').innerText = "Web Pageinstance spawned: \n" + webPageInstance.toString() + "\nInstance ID: " + webPageInstance.id.toString("hex")
+                        document.getElementById('infosofcontract').innerText = "Web Pageinstance spawned: \n" + webPageInstance.toString() + "\nInstance ID: " + webPageInstance.id.toString("hex")
                         webPageInstanceID = webPageInstance.id.toString("hex")
                       },
                     (e: Error) => {
