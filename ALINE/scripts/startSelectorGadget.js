@@ -7,7 +7,7 @@ s.style.position='fixed';
 s.style.zIndex='9999';
 s.style.fontSize='3.0em';
 s.style.border='2px solid black';
-s.style.right='40px';
+s.style.left='40px';
 s.style.top='40px';
 s.setAttribute('class','selector_gadget_loading');
 s.style.background='white';
