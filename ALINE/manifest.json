@@ -23,7 +23,8 @@
    "webRequest",
    "*://localhost/",
    "<all_urls>",
-   "downloads"
+   "downloads",
+   "storage"
   ],
   "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }

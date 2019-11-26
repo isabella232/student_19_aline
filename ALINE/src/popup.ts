@@ -4,9 +4,10 @@ import { ContractWebPageData } from "./WebPageInstance";
 import { Handler } from "./Handler";
 import { roster } from "./roster";
 
-//TODO:2 when uploading, compare actual url with contract url
 //TODO: 3retrieve domain -> use already exsting functions to parse URLs for file name
 //TODO: 4save textonly checkbox somewhere for section page !!!
+
+//TODO: when uploading, compare actual url with contract url
 //TODO: Gestion erreur utilisateur ?
 export {
   Cothority
@@ -15,12 +16,17 @@ export {
 window.onload = function () {
 
   /*---------------------------------------------------------------------
+ |  Restaure Text Only check box value
+ *-------------------------------------------------------------------*/
+  document.addEventListener('DOMContentLoaded', restore_options);
+
+  /*---------------------------------------------------------------------
    |  Certify whole page
    *-------------------------------------------------------------------*/
   var checkPageButton = document.getElementById('fullpage');
   if (checkPageButton) {
     checkPageButton.addEventListener('click', function () {
-      spawnWebPageContractWithParameters("html", true);
+      spawnWebPageContractWithParameters("html");
     }, false);
   }
 
@@ -34,7 +40,7 @@ window.onload = function () {
     checkPageSectionButton.addEventListener('click', function () {
 
       alert("Please click on the desired section of the webpage, then click on the extension icon again.\n")
-
+      save_options();
       chrome.tabs.executeScript(null, {
         file: "./scripts/startSelectorGadget.js"
       }, function () {
@@ -79,7 +85,7 @@ window.onload = function () {
     }
 
     // Spawn the contract
-    spawnWebPageContractWithParameters(pageSectionSelector, false);
+    spawnWebPageContractWithParameters(pageSectionSelector);
 
   });
 
@@ -113,7 +119,7 @@ window.onload = function () {
 /*---------------------------------------------------------------------
  |  Spawn contract with correct parameters
  *-------------------------------------------------------------------*/
-async function spawnWebPageContractWithParameters(selector: string, wholePage: Boolean) {
+async function spawnWebPageContractWithParameters(selector: string) {
 
   document.getElementById('loadinggifid').style.visibility = "visible"
   document.getElementById('status').innerText = "Your contract is currently being created. Please do not click anywhere."
@@ -164,5 +170,24 @@ async function spawnWebPageContractWithParameters(selector: string, wholePage: B
       (e) => console.log("failed to spawn web page: " + e)
     )
 
+  });
+}
+
+// Save checkbox value inbetween extension reloadings
+function save_options() {
+  var textOnlyCurrent = document.getElementById('txtOnly') as HTMLInputElement;
+  var textOnlyCurrentValue = textOnlyCurrent.checked;
+  chrome.storage.sync.set({
+    textOnlyOrNot: textOnlyCurrentValue,
+  });
+}
+// Restore checkbox value when extension is reloading
+function restore_options() {
+  // Use default value color = 'red' and likesColor = true.
+  chrome.storage.sync.get({
+    textOnlyOrNot: false,
+  }, function (items) {
+    var valueToUpdate = document.getElementById('txtOnly') as HTMLInputElement;
+    valueToUpdate.checked = items.textOnlyOrNot;
   });
 }
