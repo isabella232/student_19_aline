@@ -1,9 +1,9 @@
 package byzcoin
 
 type ContractWebPageData struct {
-	URLWebPage   string
-	Content      []byte
-	Selector     string
-	CreationDate string
-	TextOnly     bool
+	URLWebPage    string
+	HashedContent []byte
+	Selector      string
+	CreationDate  string
+	TextOnly      bool
 }

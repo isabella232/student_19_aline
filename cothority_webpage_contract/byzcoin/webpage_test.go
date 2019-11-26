@@ -86,7 +86,7 @@ func TestSpawn(t *testing.T) {
 	hashedContent := blake2b.Sum256([]byte(content))
 
 	require.Equal(t, URLArg, result.URLWebPage)
-	require.Equal(t, hashedContent[:], result.Content)
+	require.Equal(t, hashedContent[:], result.HashedContent)
 	require.Equal(t, selector, result.Selector)
 	require.Equal(t, time.Now().Format("01-02-2006"), result.CreationDate)
 	require.Equal(t, textOnly, result.TextOnly)
