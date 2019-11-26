@@ -100,9 +100,11 @@
       font-size: 16px;
     }
 
-    .downloadbutton {
+    .downloadbutton, .loadinggif {
       visibility: hidden;
+      margin-top: 20px;
     }
+
   </style>
 </head>
 
@@ -147,7 +149,10 @@
       <INPUT class="textonlydiv" type="checkbox" id="txtOnly">
       Text only (without HTML)
     </label>
+    <center>
+    <IMG id = "loadinggifid" class ="loadinggif" SRC="loading_spinner.gif">
     <div class="statusclass" id="status"></div>
+    </center>
   </div>
   <div id="loader"></div>
   <div id="infosofcontract"></div>
