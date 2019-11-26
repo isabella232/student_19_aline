@@ -4,7 +4,10 @@ import { ContractWebPageData } from "./WebPageInstance";
 import { Handler } from "./Handler";
 import { roster } from "./roster";
 
-//TODO: After loading, simply displaying that the contract has been successfully created with button appearing
+//TODO:2 when uploading, compare actual url with contract url
+//TODO: 3retrieve domain -> use already exsting functions to parse URLs for file name
+//TODO: 4save textonly checkbox somewhere for section page !!!
+//TODO: Gestion erreur utilisateur ?
 export {
   Cothority
 };
@@ -17,7 +20,7 @@ window.onload = function () {
   var checkPageButton = document.getElementById('fullpage');
   if (checkPageButton) {
     checkPageButton.addEventListener('click', function () {
-      spawnWebPageContractWithParameters("html");
+      spawnWebPageContractWithParameters("html", true);
     }, false);
   }
 
@@ -25,7 +28,7 @@ window.onload = function () {
    |  Certify page section
    *-------------------------------------------------------------------*/
 
-  // STEP 1 : Select section of webpage
+  // STEP 1 : Click on button to initiate the procedure
   var checkPageSectionButton = document.getElementById('pagesection');
   if (checkPageSectionButton) {
     checkPageSectionButton.addEventListener('click', function () {
@@ -76,7 +79,7 @@ window.onload = function () {
     }
 
     // Spawn the contract
-    spawnWebPageContractWithParameters(pageSectionSelector);
+    spawnWebPageContractWithParameters(pageSectionSelector, false);
 
   });
 
@@ -98,10 +101,10 @@ window.onload = function () {
   if (checkDownloadInfosButton) {
     checkDownloadInfosButton.addEventListener('click', function () {
       // TODO: Implement this feature !
-      var blob = new Blob(["array of", " parts of ", "text file"], { type: "text/plain" });
+      var blob = new Blob([document.getElementById('infosofcontract').innerText], { type: "text/plain" });
       chrome.downloads.download({
         url: URL.createObjectURL(blob),
-        filename: "TODO:CLEAR NAME WITH ID OF INSTANCE"
+        filename: "TODOCLEAR NAME WITH ID OF INSTANCE"
       });
     }, false);
   }
@@ -110,9 +113,10 @@ window.onload = function () {
 /*---------------------------------------------------------------------
  |  Spawn contract with correct parameters
  *-------------------------------------------------------------------*/
-async function spawnWebPageContractWithParameters(selector: string) {
+async function spawnWebPageContractWithParameters(selector: string, wholePage: Boolean) {
 
-  document.getElementById('status').innerText = "Loading ..."
+  document.getElementById('loadinggifid').style.visibility = "visible"
+  document.getElementById('status').innerText = "Your contract is currently being created. Please do not click anywhere."
 
   // Retrieve current URL  
   chrome.tabs.query({
@@ -148,13 +152,12 @@ async function spawnWebPageContractWithParameters(selector: string) {
     contractWebPageData.Selector = selector;
     contractWebPageData.TextOnly = textOnly;
 
-    //TODO: Try to lower timeout
-    await new Promise(resolve => setTimeout(resolve, 100))
     await spawnWebPage(contractWebPageData).then(
       (r) => {
         console.log("instance spawned: " + r)
         document.getElementById("downloadcontent").style.visibility = "visible";
         document.getElementById("downloadinfos").style.visibility = "visible";
+        document.getElementById('loadinggifid').style.visibility = "hidden"
         document.getElementById('status').innerText = "Your contract has been successfully created !"
       }
     ).catch(
