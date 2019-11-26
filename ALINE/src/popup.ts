@@ -93,12 +93,16 @@ window.onload = function () {
     }, false);
   }
 
-  // Check if button to download the content of the webpage is pressed
+  // Check if button to download the information of the webpage is pressed
   var checkDownloadInfosButton = document.getElementById('downloadinfos');
   if (checkDownloadInfosButton) {
     checkDownloadInfosButton.addEventListener('click', function () {
       // TODO: Implement this feature !
-      alert("Me tooo !");
+      var blob = new Blob(["array of", " parts of ", "text file"], { type: "text/plain" });
+      chrome.downloads.download({
+        url: URL.createObjectURL(blob),
+        filename: "TODO:CLEAR NAME WITH ID OF INSTANCE"
+      });
     }, false);
   }
 }

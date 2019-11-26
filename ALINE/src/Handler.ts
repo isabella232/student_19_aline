@@ -157,7 +157,8 @@ export class Handler {
             }
         )
     }
-  
+    
+    //TODO: return string
     async SpawnWebPage(contractWebPageData: ContractWebPageData) {
         Handler.startLoader()
         console.log("creating an RPC to spawn a new web page instance...")
@@ -168,7 +169,7 @@ export class Handler {
             console.log("RPC created, we now send a spawn:webPage request...")
                 await WebPageInstance.spawn(r, Handler.darc.getBaseID(), [Handler.signer], "webPageArgs", Buffer.from(ContractWebPageData.encode(contractWebPageData).finish())).then(
                   (webPageInstance: WebPageInstance) => {
-                        document.getElementById('infosofcontract').innerText = "Web Pageinstance spawned: \n" + webPageInstance.toString() + "\nInstance ID: " + webPageInstance.id.toString("hex")
+                        document.getElementById('infosofcontract').innerText = "Web Page instance spawned: \n" + webPageInstance.toString() + "\nInstance ID: " + webPageInstance.id.toString("hex")
                         webPageInstanceID = webPageInstance.id.toString("hex")
                       },
                     (e: Error) => {
