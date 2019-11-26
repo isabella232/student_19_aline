@@ -73,7 +73,7 @@ export class WebPageInstance extends Instance {
  */
 export class ContractWebPageData extends Message<ContractWebPageData> {
     URLWebPage: string;
-    Content: Buffer;
+    HashedContent: Buffer;
     Selector: string;
     CreationDate: string;
     TextOnly: boolean;
@@ -82,7 +82,7 @@ export class ContractWebPageData extends Message<ContractWebPageData> {
         super(props);
 
         this.URLWebPage = this.URLWebPage || "No URL has been found.";
-        this.Content = Buffer.from(this.Content || EMPTY_BUFFER);
+        this.HashedContent = Buffer.from(this.HashedContent || EMPTY_BUFFER);
         this.Selector = this.Selector|| "No selector has been found";
         this.CreationDate = this.CreationDate || "No creation date has been found";
         this.TextOnly = this.TextOnly || true;
@@ -98,7 +98,7 @@ export class ContractWebPageData extends Message<ContractWebPageData> {
         res += "contractWebPageData:\n";
         res += "URL: " + this.URLWebPage;
         res += "\n";
-        res += "Content: " + this.Content;
+        res += "Hashed content: " + this.HashedContent.toString("hex");
         res += "\n";
         res += "Selector: " + this.Selector;
         res += "\n";
