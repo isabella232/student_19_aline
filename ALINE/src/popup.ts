@@ -5,7 +5,6 @@ import { Handler } from "./Handler";
 import { roster } from "./roster";
 
 //TODO: 3retrieve domain -> use already exsting functions to parse URLs for file name
-//TODO: 4save textonly checkbox somewhere for section page !!!
 
 //TODO: when uploading, compare actual url with contract url
 //TODO: Gestion erreur utilisateur ?
@@ -14,15 +13,12 @@ export {
 };
 
 window.onload = function () {
-
-  /*---------------------------------------------------------------------
- |  Restaure Text Only check box value
- *-------------------------------------------------------------------*/
+  
   document.addEventListener('DOMContentLoaded', restore_options);
 
   /*---------------------------------------------------------------------
-   |  Certify whole page
-   *-------------------------------------------------------------------*/
+    |  Certify whole page
+    *-------------------------------------------------------------------*/
   var checkPageButton = document.getElementById('fullpage');
   if (checkPageButton) {
     checkPageButton.addEventListener('click', function () {
@@ -38,9 +34,8 @@ window.onload = function () {
   var checkPageSectionButton = document.getElementById('pagesection');
   if (checkPageSectionButton) {
     checkPageSectionButton.addEventListener('click', function () {
-
-      alert("Please click on the desired section of the webpage, then click on the extension icon again.\n")
       save_options();
+      alert("Please click on the desired section of the webpage, then click on the extension icon again.\n")
       chrome.tabs.executeScript(null, {
         file: "./scripts/startSelectorGadget.js"
       }, function () {
@@ -83,6 +78,10 @@ window.onload = function () {
         allFrames: true,
       });
     }
+
+    // Restaure Text Only check box value
+
+    restore_options();
 
     // Spawn the contract
     spawnWebPageContractWithParameters(pageSectionSelector);
@@ -183,11 +182,11 @@ function save_options() {
 }
 // Restore checkbox value when extension is reloading
 function restore_options() {
-  // Use default value color = 'red' and likesColor = true.
+  // Use default value for textOnly file
   chrome.storage.sync.get({
-    textOnlyOrNot: false,
+    textOnlyOrNot: false
   }, function (items) {
-    var valueToUpdate = document.getElementById('txtOnly') as HTMLInputElement;
-    valueToUpdate.checked = items.textOnlyOrNot;
+    var textOnlyCurrent = document.getElementById('txtOnly') as HTMLInputElement;
+    textOnlyCurrent.checked = items.textOnlyOrNot;
   });
 }
