@@ -4,11 +4,8 @@ import {ContractWebPageData} from "./ContractWebPageData"
 import { Handler } from "./Handler";
 import { roster } from "./roster";
 
-//TODO: 3retrieve domain -> use already exsting functions to parse URLs for file name
-
 //TODO: when uploading, compare actual url with contract url
 //TODO: Gestion erreur utilisateur ?
-//TODO: to string n'a plus de retours à la ligne ???
 export {
   Cothority
 };
