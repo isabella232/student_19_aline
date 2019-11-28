@@ -95,17 +95,18 @@ export class ContractWebPageData extends Message<ContractWebPageData> {
 
     toString(): string {
         var res: string = "";
-        res += "contractWebPageData:\n";
+        res += "contractWebPageData:\r\n";
+        res += "\r\n";
         res += "URL: " + this.URLWebPage;
-        res += "\n";
+        res += "\r\n";
         res += "Hashed content: " + this.HashedContent.toString("hex");
-        res += "\n";
+        res += "\r\n";
         res += "Selector: " + this.Selector;
-        res += "\n";
+        res += "\r\n";
         res += "Creation Date: " + this.CreationDate;
-        res += "\n";
+        res += "\r\n";
         res += "Text Only: " + this.TextOnly;
-        res += "\n";
+        res += "\r\n";
         return res;
     }
 }

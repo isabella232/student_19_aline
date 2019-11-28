@@ -8,6 +8,7 @@ import { roster } from "./roster";
 
 //TODO: when uploading, compare actual url with contract url
 //TODO: Gestion erreur utilisateur ?
+//TODO: to string n'a plus de retours à la ligne ???
 export {
   Cothority
 };
@@ -106,11 +107,21 @@ window.onload = function () {
   if (checkDownloadInfosButton) {
     checkDownloadInfosButton.addEventListener('click', function () {
       // TODO: Implement this feature !
-      var blob = new Blob([document.getElementById('infosofcontract').innerText], { type: "text/plain" });
-      chrome.downloads.download({
-        url: URL.createObjectURL(blob),
-        filename: "TODOCLEAR NAME WITH ID OF INSTANCE"
+      chrome.tabs.query({
+        'active': true,
+        'lastFocusedWindow': true
+      }, async function (tabs) {
+    
+        // Retrieve URL of current webpage
+        var url = tabs[0].url;
+        var domain = url.replace('www.','').replace('http://','').replace('https://','').split(/[/?#]/)[0];
+        var blob = new Blob([document.getElementById('infosofcontract').innerText], { type: "text/plain", endings:'native' });
+        chrome.downloads.download({
+          url: URL.createObjectURL(blob),
+          filename: "Attestation of website " + domain
+        });
       });
+
     }, false);
   }
 }
@@ -121,7 +132,7 @@ window.onload = function () {
 async function spawnWebPageContractWithParameters(selector: string) {
 
   document.getElementById('loadinggifid').style.visibility = "visible"
-  document.getElementById('status').innerText = "Your contract is currently being created. Please do not click anywhere."
+  document.getElementById('status').innerText = "Your attestation is currently being created. Please do not click anywhere."
 
   // Retrieve current URL  
   chrome.tabs.query({
