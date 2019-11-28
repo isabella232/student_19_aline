@@ -1,6 +1,6 @@
 import * as Cothority from "@dedis/cothority";
 import { getDarc, loadSigner, addRule, spawnWebPage } from "./Utilities";
-import {ContractWebPageData} from "./ContractWebPageData"
+import { ContractWebPageData } from "./ContractWebPageData"
 import { Handler } from "./Handler";
 import { roster } from "./roster";
 
@@ -11,7 +11,7 @@ export {
 };
 
 window.onload = function () {
-  
+
   document.addEventListener('DOMContentLoaded', restore_options);
 
   /*---------------------------------------------------------------------
@@ -21,6 +21,7 @@ window.onload = function () {
   if (checkPageButton) {
     checkPageButton.addEventListener('click', function () {
       spawnWebPageContractWithParameters("html");
+      document.getElementById('sectionorfull').innerText = "full";
     }, false);
   }
 
@@ -63,6 +64,7 @@ window.onload = function () {
 
       // Retrieve CSS Selector
       var pageSectionSelector = request.CSSSelector
+    document.getElementById('cssselector').innerText = pageSectionSelector;
 
     // After we retrieve the CSS selector, we close Selector Gadget
     var files = [
@@ -83,6 +85,7 @@ window.onload = function () {
 
     // Spawn the contract
     spawnWebPageContractWithParameters(pageSectionSelector);
+    document.getElementById('sectionorfull').innerText = "section";
 
   });
 
@@ -95,7 +98,38 @@ window.onload = function () {
   if (checkDownloadContentButton) {
     checkDownloadContentButton.addEventListener('click', function () {
       // TODO: Implement this feature !
-      alert("I am ready !")
+      chrome.tabs.query({
+        'active': true,
+        'lastFocusedWindow': true
+      }, async function (tabs) {
+
+        // Retrieve URL of current webpage
+        var url = tabs[0].url;
+        var domain = url.replace('www.', '').replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
+        const textOnlyBox = document.getElementById('txtOnly') as HTMLInputElement;
+
+        var textOnly = textOnlyBox.checked
+        if (textOnly) {
+          if (document.getElementById('sectionorfull').innerText.localeCompare("full") == 0) {
+            var blob = new Blob([document.documentElement.innerText], { type: "text/plain" });
+          } else {
+            var selectorElement = document.querySelector(document.getElementById('cssselector').innerText) as HTMLElement;
+            var blob = new Blob([selectorElement.innerText], { type: "text/plain" });
+          }
+        } else {
+          if (document.getElementById('sectionorfull').innerText.localeCompare("full") == 0) {
+            var blob = new Blob([document.documentElement.innerHTML], { type: "text/plain" });
+          } else {
+            var selectorElement = document.querySelector(document.getElementById('cssselector').innerHTML) as HTMLElement;
+            var blob = new Blob([selectorElement.innerText], { type: "text/plain" });
+          }
+        }
+        chrome.downloads.download({
+          url: URL.createObjectURL(blob),
+          filename: "Content of website " + domain
+        });
+      });
+
     }, false);
   }
 
@@ -107,17 +141,16 @@ window.onload = function () {
         'active': true,
         'lastFocusedWindow': true
       }, async function (tabs) {
-    
+
         // Retrieve URL of current webpage
         var url = tabs[0].url;
-        var domain = url.replace('www.','').replace('http://','').replace('https://','').split(/[/?#]/)[0];
-        var blob = new Blob([document.getElementById('infosofcontract').innerText], {type: "text/plain"});
+        var domain = url.replace('www.', '').replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
+        var blob = new Blob([document.getElementById('infosofcontract').innerText], { type: "text/plain" });
         chrome.downloads.download({
           url: URL.createObjectURL(blob),
           filename: "Attestation of website " + domain
         });
       });
-
     }, false);
   }
 }
