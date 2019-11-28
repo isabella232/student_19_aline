@@ -1,5 +1,6 @@
 import * as Cothority from "@dedis/cothority";
-import {WebPageInstance, ContractWebPageData} from "./WebPageInstance";
+import {WebPageInstance} from "./WebPageInstance";
+import {ContractWebPageData} from "./ContractWebPageData"
 
 // ----------------------------------------------------------------------------
 // The Handler class is a singleton that offers methods to talk to the cothority
@@ -169,8 +170,7 @@ export class Handler {
             console.log("RPC created, we now send a spawn:webPage request...")
                 await WebPageInstance.spawn(r, Handler.darc.getBaseID(), [Handler.signer], "webPageArgs", Buffer.from(ContractWebPageData.encode(contractWebPageData).finish())).then(
                   (webPageInstance: WebPageInstance) => {
-                        document.getElementById('infosofcontract').style.display = "none";
-                        document.getElementById('infosofcontract').innerText = "Web Page instance spawned: \n" + webPageInstance.toString() + "\nInstance ID: " + webPageInstance.id.toString("hex")
+                        document.getElementById('infosofcontract').innerText = webPageInstance.toStringForUsers() + "\nInstance ID: " + webPageInstance.id.toString("hex")
                         webPageInstanceID = webPageInstance.id.toString("hex")
                       },
                     (e: Error) => {

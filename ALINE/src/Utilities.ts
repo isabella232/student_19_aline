@@ -1,5 +1,5 @@
 import * as Cothority from "@dedis/cothority";
-import { ContractWebPageData } from "./WebPageInstance";
+import {ContractWebPageData} from "./ContractWebPageData"
 import { Handler } from "./Handler";
 
 // ----------------------------------------------------------------------------

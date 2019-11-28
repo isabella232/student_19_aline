@@ -1,6 +1,6 @@
 import * as Cothority from "@dedis/cothority";
 import { getDarc, loadSigner, addRule, spawnWebPage } from "./Utilities";
-import { ContractWebPageData } from "./WebPageInstance";
+import {ContractWebPageData} from "./ContractWebPageData"
 import { Handler } from "./Handler";
 import { roster } from "./roster";
 
@@ -106,7 +106,6 @@ window.onload = function () {
   var checkDownloadInfosButton = document.getElementById('downloadinfos');
   if (checkDownloadInfosButton) {
     checkDownloadInfosButton.addEventListener('click', function () {
-      // TODO: Implement this feature !
       chrome.tabs.query({
         'active': true,
         'lastFocusedWindow': true
@@ -174,7 +173,7 @@ async function spawnWebPageContractWithParameters(selector: string) {
         document.getElementById("downloadcontent").style.visibility = "visible";
         document.getElementById("downloadinfos").style.visibility = "visible";
         document.getElementById('loadinggifid').style.visibility = "hidden"
-        document.getElementById('status').innerText = "Your contract has been successfully created !"
+        document.getElementById('status').innerText = "Your contract has been successfully created !\n\n"
       }
     ).catch(
       (e) => console.log("failed to spawn web page: " + e)
