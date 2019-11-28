@@ -159,7 +159,6 @@ export class Handler {
         )
     }
     
-    //TODO: return string
     async SpawnWebPage(contractWebPageData: ContractWebPageData) {
         Handler.startLoader()
         console.log("creating an RPC to spawn a new web page instance...")
