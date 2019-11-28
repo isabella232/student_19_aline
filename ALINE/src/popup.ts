@@ -114,7 +114,7 @@ window.onload = function () {
         // Retrieve URL of current webpage
         var url = tabs[0].url;
         var domain = url.replace('www.','').replace('http://','').replace('https://','').split(/[/?#]/)[0];
-        var blob = new Blob([document.getElementById('infosofcontract').innerText], { type: "text/plain", endings:'native' });
+        var blob = new Blob([document.getElementById('infosofcontract').innerText], {type: "text/plain"});
         chrome.downloads.download({
           url: URL.createObjectURL(blob),
           filename: "Attestation of website " + domain
