@@ -10,7 +10,8 @@
                   "scripts/jquery-3.4.1.js",
                   "scripts/startSelectorGadget.js",
                   "scripts/findCSSSelector.js",
-                  "scripts/closeSelectorGadget.js"],
+                  "scripts/closeSelectorGadget.js",
+                  "scripts/retrieveWebpageContent.js"],
       "persistent": true
     },
     

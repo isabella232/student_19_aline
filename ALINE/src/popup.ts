@@ -1,5 +1,5 @@
 import * as Cothority from "@dedis/cothority";
-import {spawnWebPageContractWithParameters, save_options, restore_options} from "./AlineUtilities"
+import { spawnWebPageContractWithParameters, save_options, restore_options } from "./AlineUtilities"
 
 
 //TODO: when uploading, compare actual url with contract url
@@ -91,10 +91,23 @@ window.onload = function () {
  |  Download contract data
  *-------------------------------------------------------------------*/
 
+  /*---------------------------------------------------------------------
+ |  Download content of attestation
+ *-------------------------------------------------------------------*/
   // Check if button to download the content of the webpage is pressed
   var checkDownloadContentButton = document.getElementById('downloadcontent');
+
   if (checkDownloadContentButton) {
     checkDownloadContentButton.addEventListener('click', function () {
+      chrome.tabs.executeScript(null, {
+        file: "./scripts/retrieveWebpageContent.js"
+      }, function () {
+
+        if (chrome.runtime.lastError) {
+          console.log("There was an error injecting script : \n" + chrome.runtime.lastError.message);
+        }
+      });
+
       chrome.tabs.query({
         'active': true,
         'lastFocusedWindow': true
@@ -103,33 +116,38 @@ window.onload = function () {
         // Retrieve URL of current webpage
         var url = tabs[0].url;
         var domain = url.replace('www.', '').replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
-        const textOnlyBox = document.getElementById('txtOnly') as HTMLInputElement;
 
-        var textOnly = textOnlyBox.checked
-        if (textOnly) {
-          if (document.getElementById('sectionorfull').innerText.localeCompare("full") == 0) {
-            var blob = new Blob([document.documentElement.innerText], { type: "text/plain" });
-          } else {
-            var selectorElement = document.querySelector(document.getElementById('cssselector').innerText) as HTMLElement;
-            var blob = new Blob([selectorElement.innerText], { type: "text/plain" });
-          }
-        } else {
-          if (document.getElementById('sectionorfull').innerText.localeCompare("full") == 0) {
-            var blob = new Blob([document.documentElement.innerHTML], { type: "text/plain" });
-          } else {
-            var selectorElement = document.querySelector(document.getElementById('cssselector').innerHTML) as HTMLElement;
-            var blob = new Blob([selectorElement.innerText], { type: "text/plain" });
-          }
+        const textOnlyBox = document.getElementById('txtOnly') as HTMLInputElement;
+        var sectionOrFull = document.getElementById('sectionorfull').innerText.localeCompare("full") == 0;
+        chrome.extension.sendRequest({ textOnly: textOnlyBox });
+        chrome.extension.sendRequest({ sectionOrFull: sectionOrFull });
+
+        if (document.getElementById('sectionorfull').innerText.localeCompare("section") == 0) {
+          chrome.extension.sendRequest({ selector: document.getElementById('cssselector').innerText });
         }
-        chrome.downloads.download({
-          url: URL.createObjectURL(blob),
-          filename: "Content of website " + domain
+
+        // Retrieve content to write to file
+        chrome.extension.onRequest.addListener(function (request, sender, sendResponse) {
+          if (sender.tab)
+
+            // Retrieve CSS Selector
+            var content = request.content
+          var blob = new Blob([content], { type: "text/plain" });
+          chrome.downloads.download({
+            url: URL.createObjectURL(blob),
+            filename: "Content of website " + domain
+          });
+
         });
+
       });
 
     }, false);
   }
 
+  /*---------------------------------------------------------------------
+ |  Download information of the attestation
+ *-------------------------------------------------------------------*/
   // Check if button to download the information of the webpage is pressed
   var checkDownloadInfosButton = document.getElementById('downloadinfos');
   if (checkDownloadInfosButton) {
