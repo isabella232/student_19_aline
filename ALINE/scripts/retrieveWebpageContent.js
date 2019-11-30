@@ -4,8 +4,8 @@ var sectionOrFull;
 var textOnly;
 var selector;
 
-chrome.runtime.onRequest.addListener(
-    function (request, sender, sendRequest) {
+chrome.runtime.onMessage.addListener(
+    function (request, sender, sendResponse) {
 
         isFull = request.isFull;
         textOnly = request.textOnly;
@@ -15,15 +15,15 @@ chrome.runtime.onRequest.addListener(
         // Retrieve the actual content
         if (textOnly) {
             if (isFull.innerText.localeCompare("full") == 0) {
-                sendRequest({ content: document.documentElement.innerText });
+                sendResponse({ content: document.documentElement.innerText });
             } else {
-                sendRequest({ content: document.querySelector(selector).innerText });
+                sendResponse({ content: document.querySelector(selector).innerText });
             }
         } else {
             if (document.getElementById('sectionorfull').innerText.localeCompare("full") == 0) {
-                sendRequest({ content: document.documentElement.innerHTML });
+                sendResponse({ content: document.documentElement.innerHTML });
             } else {
-                sendRequest({ content: document.querySelector(selector).innerHTML });
+                sendResponse({ content: document.querySelector(selector).innerHTML });
             }
         }
 
