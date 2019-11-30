@@ -17,8 +17,8 @@ export async function spawnWebPageContractWithParameters(selector: string) {
       'lastFocusedWindow': true
     }, async function (tabs) {
   
-      var skipChainID = "0191ff647ab0d73bc2b5798077f1b43b6c032435d412a29e8fc24c958d995bf8";
-      var privateKey = "d7ef534d6bc30fd84903e11d15a1d091b17c9f307a20fef1e83bb6fadd1e6404";
+      var skipChainID = "8653fd3407a680dc41b569afcd329f61d0a0e528e66158d4cc3fc593d9d8e0fa";
+      var privateKey = "ef31a12194cf70b960644d010e12a77a874bcc16ed20af3224a5ac40ad82ea03";
   
       // Retrieve URL of current webpage
       var url = tabs[0].url;
