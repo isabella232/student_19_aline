@@ -123,7 +123,26 @@ window.onload = function () {
             console.log("Error in script : \n" + chrome.runtime.lastError.message);
           }
         });*/
-        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+          chrome.tabs.sendRequest(tabs[0].id, { isFull: isFull, textOnly: textOnlyBox, CSSSelector: CSSSelector });
+          console.log("request sent");
+          chrome.tabs.executeScript(null, {
+            file: "./scripts/retrieveWebpageContent.js"
+          }, function () {
+            if (chrome.runtime.lastError) {
+              console.log("Error in script : \n" + chrome.runtime.lastError.message);
+            }
+          });
+          console.log("script run");
+            chrome.extension.onRequest.addListener(function (request, sender, sendResponse) {
+            alert(request.content);
+            console.log("got content maybe?");
+
+        });
+        console.log("end");
+
+
+ 
+        /*chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
           chrome.tabs.sendMessage(tabs[0].id, { isFull: isFull, textOnly: textOnlyBox, CSSSelector: CSSSelector }, function (response) {
             var content = response.content
             console.log("receive content");
