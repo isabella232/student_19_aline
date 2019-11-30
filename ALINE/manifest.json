@@ -10,11 +10,16 @@
                   "scripts/jquery-3.4.1.js",
                   "scripts/startSelectorGadget.js",
                   "scripts/findCSSSelector.js",
-                  "scripts/closeSelectorGadget.js",
-                  "scripts/retrieveWebpageContent.js"],
+                  "scripts/closeSelectorGadget.js"],
       "persistent": true
     },
-    
+
+    "content_scripts": [ {
+      "matches": ["<all_urls>"],
+      "js": ["scripts/retrieveWebpageContent.js"],
+      "all_frames": true
+    } ],
+
 	"browser_action": {
     "default_icon": "icon.png",
     "default_popup": "popup.html"
