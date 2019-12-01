@@ -123,6 +123,7 @@ window.onload = function () {
             console.log("Error in script : \n" + chrome.runtime.lastError.message);
           }
         });*/
+        // Send message and then listen for Answer
         chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
           chrome.tabs.sendMessage(tabs[0].id, { isFull: isFull, textOnly: textOnlyBox, CSSSelector: CSSSelector }, function (response) {
             var content = response.content
@@ -181,4 +182,34 @@ window.onload = function () {
       });
     }, false);
   }
+
+
+  /*---------------------------------------------------------------------
+ |  Upload your attestation - Step 1 : Trigger forms appearance
+ *-------------------------------------------------------------------*/
+  var checkUploadButton = document.getElementById('uploadbutton');
+  if (checkUploadButton) {
+    checkUploadButton.addEventListener('click', function () {
+      document.getElementById('attestationidform').style.display = "inline";
+      document.getElementById('contentidform').style.display = "inline";
+      document.getElementById('submitbutton').style.display = "inline";
+    }, false);
+  }
+
+    /*---------------------------------------------------------------------
+ |  Upload your attestation - Step 2 : Submission
+ *-------------------------------------------------------------------*/
+
+var checkSubmitButton = document.getElementById('submitbutton');
+if (checkSubmitButton) {
+  checkSubmitButton.addEventListener('click', function () {
+    var instanceIDStringElem = document.getElementById('attestationidform') as HTMLInputElement;
+    var instanceIDString = instanceIDStringElem.value;
+    var instanceID = parseInt(instanceIDString, 10);
+    var contentToCheckElem = document.getElementById('contentidform') as HTMLInputElement;
+    var contentToCheck = contentToCheckElem.value;
+    alert(instanceID);
+    alert(contentToCheck);
+  }, false);
+}
 }

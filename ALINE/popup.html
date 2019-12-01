@@ -100,15 +100,20 @@
       font-size: 16px;
     }
 
-    .downloadbutton, .loadinggif {
+    .downloadbutton,
+    .loadinggif {
       visibility: hidden;
       margin-top: 20px;
     }
 
-    .mustalwaysbehidden{
+    .mustalwaysbehidden {
       display: none;
     }
 
+    .uploadfeature {
+      display: none;
+      margin-top: 20px;
+    }
   </style>
 </head>
 
@@ -134,28 +139,41 @@
         <FORM />
     </div>
     <div class="flex">
-      <div class="flex">
         <FORM>
           <INPUT Type="BUTTON" class="downloadbutton" id="downloadcontent"
             Value="Download the content of this web page">
           <FORM />
-      </div>
     </div>
     <div class="flex">
-      <div class="flex">
         <FORM>
           <INPUT Type="BUTTON" class="downloadbutton" id="downloadinfos"
             Value="Download the information of the attestation">
           <FORM />
       </div>
+      <div class="flex">
+        <FORM>
+          <INPUT Type="BUTTON" class="uploadbuttonc" id="uploadbutton" Value="Check your attestation">
+          <FORM />
+      </div>
+
+
+      <form>
+        <input id = "attestationidform" type="text" class="uploadfeature" name="attestationid" value="ID of attestation">
+        <input id = "contentidform" type="text" class="uploadfeature" name="certifiedcontent" value="Content of webpage">
+        <div class="flex">
+        <input id = "submitbutton" type="button" class="uploadfeature" value="Submit">
+        </div>
+      </form>
+
+      <label>
+        <INPUT class="textonlydiv" type="checkbox" id="txtOnly">
+        Text only (without HTML)
+      </label>
     </div>
-    <label>
-      <INPUT class="textonlydiv" type="checkbox" id="txtOnly">
-      Text only (without HTML)
-    </label>
+
     <center>
-    <IMG id = "loadinggifid" class ="loadinggif" SRC="loading_spinner.gif">
-    <div class="statusclass" id="status"></div>
+      <IMG id="loadinggifid" class="loadinggif" SRC="loading_spinner.gif">
+      <div class="statusclass" id="status"></div>
     </center>
     <div id="infosofcontract"></div>
   </div>
