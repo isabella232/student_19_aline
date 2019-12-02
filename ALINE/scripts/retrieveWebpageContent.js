@@ -11,16 +11,15 @@ chrome.runtime.onMessage.addListener(
         textOnly = request.textOnly;
         CSSSelector = request.CSSSelector;
 
-        console.log("receive msg 1,2,3");
         // Retrieve the actual content
-        if (textOnly) {
-            if (isFull.innerText.localeCompare("full") == 0) {
+        if (textOnly.localeCompare("true") == 0) {
+            if (isFull.localeCompare("full") == 0) {
                 sendResponse({ content: document.documentElement.innerText });
             } else {
                 sendResponse({ content: document.querySelector(selector).innerText });
             }
         } else {
-            if (document.getElementById('sectionorfull').innerText.localeCompare("full") == 0) {
+            if (isFull.localeCompare("full") == 0) {
                 sendResponse({ content: document.documentElement.innerHTML });
             } else {
                 sendResponse({ content: document.querySelector(selector).innerHTML });

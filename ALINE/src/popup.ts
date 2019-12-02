@@ -106,26 +106,26 @@ window.onload = function () {
         var url = tabs[0].url;
         var domain = url.replace('www.', '').replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
 
-        const textOnlyBox = document.getElementById('txtOnly') as HTMLInputElement;
-        var isFull = document.getElementById('sectionorfull').innerText.localeCompare("full") == 0;
+        var textOnlyElem = document.getElementById('txtOnly') as HTMLInputElement;
+        var textOnlyBox = textOnlyElem.checked;
+        var isFull = document.getElementById('sectionorfull').innerText;
+        var textOnly = "initialization";
+        if(textOnlyBox){
+          textOnly = "true"
+        } else {
+          textOnly = "false";
+        }
 
         var CSSSelector: string;
-        if (isFull) {
+        if (isFull.localeCompare("full") == 0) {
           CSSSelector = "html";
         } else {
           CSSSelector = document.getElementById('cssselector').innerText
         }
-        // SECOND ATTP
-        /*chrome.tabs.executeScript(null, {
-          file: "./scripts/retrieveWebpageContent.js"
-        }, function () {
-          if (chrome.runtime.lastError) {
-            console.log("Error in script : \n" + chrome.runtime.lastError.message);
-          }
-        });*/
+
         // Send message and then listen for Answer
         chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-          chrome.tabs.sendMessage(tabs[0].id, { isFull: isFull, textOnly: textOnlyBox, CSSSelector: CSSSelector }, function (response) {
+          chrome.tabs.sendMessage(tabs[0].id, { isFull: isFull, textOnly: textOnly, CSSSelector: CSSSelector }, function (response) {
             var content = response.content
             console.log("receive content");
             var blob = new Blob([content], { type: "text/plain" });
@@ -135,27 +135,8 @@ window.onload = function () {
             });
           });
         });
-        //SECOND ATTP
-        //!!
-        /*chrome.tabs.executeScript(null, {
-          file: "./scripts/retrieveWebpageContent.js"
-        }, function () {
-          if (chrome.runtime.lastError) {
-            console.log("Error in script : \n" + chrome.runtime.lastError.message);
-          }
-        });*/
-
-
-        // Retrieve content to write to file
-
-        // Retrieve CSS Selector
-
-        //!!
-
-
 
       });
-
     }, false);
   }
 
