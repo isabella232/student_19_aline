@@ -1,5 +1,12 @@
 import * as Cothority from "@dedis/cothority";
-import { spawnWebPageContractWithParameters, save_options, restore_options } from "./AlineUtilities"
+import {
+  spawnWebPageContractWithParameters,
+  save_options, restore_options,
+  uploadTriggerTextForms,
+  uploadSubmitTextForms,
+  downloadContentOfWebpage,
+  downloadInfosOfAttestation
+} from "./AlineUtilities"
 
 
 //TODO: when uploading, compare actual url with contract url
@@ -76,7 +83,6 @@ window.onload = function () {
     }
 
     // Restaure Text Only check box value
-
     restore_options();
 
     // Spawn the contract
@@ -97,46 +103,7 @@ window.onload = function () {
 
   if (checkDownloadContentButton) {
     checkDownloadContentButton.addEventListener('click', function () {
-
-      chrome.tabs.query({
-        'active': true,
-        'lastFocusedWindow': true
-      }, function (tabs) {
-        // Retrieve URL of current webpage
-        var url = tabs[0].url;
-        var domain = url.replace('www.', '').replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
-
-        var textOnlyElem = document.getElementById('txtOnly') as HTMLInputElement;
-        var textOnlyBox = textOnlyElem.checked;
-        var isFull = document.getElementById('sectionorfull').innerText;
-        var textOnly = "initialization";
-        if(textOnlyBox){
-          textOnly = "true"
-        } else {
-          textOnly = "false";
-        }
-
-        var CSSSelector: string;
-        if (isFull.localeCompare("full") == 0) {
-          CSSSelector = "html";
-        } else {
-          CSSSelector = document.getElementById('cssselector').innerText
-        }
-
-        // Send message and then listen for Answer
-        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-          chrome.tabs.sendMessage(tabs[0].id, { isFull: isFull, textOnly: textOnly, CSSSelector: CSSSelector }, function (response) {
-            var content = response.content
-            console.log("receive content");
-            var blob = new Blob([content], { type: "text/plain" });
-            chrome.downloads.download({
-              url: URL.createObjectURL(blob),
-              filename: "Content of website " + domain
-            });
-          });
-        });
-
-      });
+      downloadContentOfWebpage();
     }, false);
   }
 
@@ -147,20 +114,7 @@ window.onload = function () {
   var checkDownloadInfosButton = document.getElementById('downloadinfos');
   if (checkDownloadInfosButton) {
     checkDownloadInfosButton.addEventListener('click', function () {
-      chrome.tabs.query({
-        'active': true,
-        'lastFocusedWindow': true
-      }, async function (tabs) {
-
-        // Retrieve URL of current webpage
-        var url = tabs[0].url;
-        var domain = url.replace('www.', '').replace('http://', '').replace('https://', '').split(/[/?#]/)[0];
-        var blob = new Blob([document.getElementById('infosofcontract').innerText], { type: "text/plain" });
-        chrome.downloads.download({
-          url: URL.createObjectURL(blob),
-          filename: "Attestation of website " + domain
-        });
-      });
+      downloadInfosOfAttestation();
     }, false);
   }
 
@@ -171,26 +125,18 @@ window.onload = function () {
   var checkUploadButton = document.getElementById('uploadbutton');
   if (checkUploadButton) {
     checkUploadButton.addEventListener('click', function () {
-      document.getElementById('attestationidform').style.display = "inline";
-      document.getElementById('contentidform').style.display = "inline";
-      document.getElementById('submitbutton').style.display = "inline";
+      uploadTriggerTextForms();
     }, false);
   }
 
-    /*---------------------------------------------------------------------
- |  Upload your attestation - Step 2 : Submission
- *-------------------------------------------------------------------*/
+  /*---------------------------------------------------------------------
+|  Upload your attestation - Step 2 : Submission
+*-------------------------------------------------------------------*/
 
-var checkSubmitButton = document.getElementById('submitbutton');
-if (checkSubmitButton) {
-  checkSubmitButton.addEventListener('click', function () {
-    var instanceIDStringElem = document.getElementById('attestationidform') as HTMLInputElement;
-    var instanceIDString = instanceIDStringElem.value;
-    var instanceID = parseInt(instanceIDString, 10);
-    var contentToCheckElem = document.getElementById('contentidform') as HTMLInputElement;
-    var contentToCheck = contentToCheckElem.value;
-    alert(instanceID);
-    alert(contentToCheck);
-  }, false);
-}
+  var checkSubmitButton = document.getElementById('submitbutton');
+  if (checkSubmitButton) {
+    checkSubmitButton.addEventListener('click', function () {
+      uploadSubmitTextForms();
+    }, false);
+  }
 }
