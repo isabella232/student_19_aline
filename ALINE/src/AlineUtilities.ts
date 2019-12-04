@@ -28,36 +28,42 @@ export async function spawnWebPageContractWithParameters(selector: string) {
     var textOnly = textOnlyBox.checked
 
     // Get public.toml
+    try{
     await Handler.getInstance().LoadRoster(roster);
+    } catch (e){
 
-    // Skip chain ID
-    await getDarc(skipChainID);
+    }
+  // Skip chain ID
+  await getDarc(skipChainID);
 
-    // Private Key
-    await loadSigner(privateKey);
+  // Private Key
+  await loadSigner(privateKey);
 
-    // Add rule to spawn the webPage contract
-    await addRule("spawn:webPage");
+  // Add rule to spawn the webPage contract
+  // To do only once
+  //await addRule("spawn:webPage");
 
-    // Spawn the webPage contract
-    var contractWebPageData = new ContractWebPageData();
-    contractWebPageData.URLWebPage = url;
-    contractWebPageData.Selector = selector;
-    contractWebPageData.TextOnly = textOnly;
+  // Spawn the webPage contract
+  var contractWebPageData = new ContractWebPageData();
+  contractWebPageData.URLWebPage = url;
+  contractWebPageData.Selector = selector;
+  contractWebPageData.TextOnly = textOnly;
 
-    await spawnWebPage(contractWebPageData).then(
-      (r) => {
-        console.log("instance spawned: " + r)
-        document.getElementById("downloadcontent").style.visibility = "visible";
-        document.getElementById("downloadinfos").style.visibility = "visible";
-        document.getElementById('loadinggifid').style.visibility = "hidden"
-        document.getElementById('status').innerText = "Your contract has been successfully created !\n\n"
-      }
-    ).catch(
-      (e) => console.log("failed to spawn web page: " + e)
-    )
-
-  });
+  await spawnWebPage(contractWebPageData).then(
+    (r) => {
+      document.getElementById("downloadcontent").style.visibility = "visible";
+      document.getElementById("downloadinfos").style.visibility = "visible";
+      document.getElementById('loadinggifid').style.visibility = "hidden"
+      document.getElementById('status').innerText = "Your attestation has been successfully created !\n\n"
+    }
+  ).catch(
+    (e) => {
+      console.log("failed to spawn web page: " + e)
+      displayErrorAndStop();
+      throw "A problem occured."
+    }
+  )
+});
 }
 
 // Save checkbox value inbetween extension reloadings
@@ -121,6 +127,7 @@ export async function downloadContentOfWebpage() {
     }
 
     // Send message and then listen for Answer
+    // TODO: is the line below really useful ?
     chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
       chrome.tabs.sendMessage(tabs[0].id, { isFull: isFull, textOnly: textOnly, CSSSelector: CSSSelector }, function (response) {
         var content = response.content
@@ -132,7 +139,6 @@ export async function downloadContentOfWebpage() {
         });
       });
     });
-
   });
 }
 export async function downloadInfosOfAttestation() {
@@ -151,4 +157,9 @@ export async function downloadInfosOfAttestation() {
       filename: "Attestation of website " + domain
     });
   });
+}
+
+export async function displayErrorAndStop() {
+  document.getElementById('status').innerText = "Sorry, a problem occured. Please try again.\n\n"
+  document.getElementById('loadinggifid').style.visibility = "hidden"
 }

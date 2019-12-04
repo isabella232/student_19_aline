@@ -1,6 +1,7 @@
 import * as Cothority from "@dedis/cothority";
-import {ContractWebPageData} from "./ContractWebPageData"
+import { ContractWebPageData } from "./ContractWebPageData"
 import { Handler } from "./Handler";
+import { displayErrorAndStop } from "./AlineUtilities"
 
 // ----------------------------------------------------------------------------
 // The following functions are called from the view and responsible for parsing
@@ -20,6 +21,8 @@ export function initRoster(e: Event) {
     target.value = "";
   } catch (e) {
     console.log("failed to initialize the roster: " + e)
+    displayErrorAndStop()
+    throw "A problem occured."
   }
 }
 
@@ -34,7 +37,8 @@ export async function displayStatus() {
     const div = document.createElement("div")
     if (Handler.roster === undefined) {
       console.log("handler has not been initialized");
-      return
+      displayErrorAndStop();
+      throw "A problem occured."
     }
     Handler.roster.list.forEach(element => {
       var p = document.createElement("p")
@@ -44,6 +48,8 @@ export async function displayStatus() {
     console.log(div);
   } catch (e) {
     console.log("failed to display status: " + e)
+    displayErrorAndStop()
+    throw "A problem occured."
   }
 }
 
@@ -52,11 +58,15 @@ export async function getDarc(scidID: string) {
     var r: string = Handler.checkRoster();
     if (r != "") {
       console.log(r)
-      return
+      displayErrorAndStop()
+      throw "A problem occured."
     }
+    // Pass skipchain id using this method with Buffer.from...
     await Handler.getInstance().SetDarc(Buffer.from(hexStringToByte(scidID)))
   } catch (e) {
     console.log("failed to set DARC: " + e)
+    displayErrorAndStop()
+    throw "A problem occured."
   }
 }
 
@@ -65,11 +75,14 @@ export async function loadSigner(signerID: string) {
     var r: string = Handler.checkRoster() || Handler.checkDarc();
     if (r != "") {
       console.log(r)
-      return
+      displayErrorAndStop()
+      throw "A problem occured."
     }
     await Handler.getInstance().SetSigner(Buffer.from(hexStringToByte(signerID)))
   } catch (e) {
     console.log("failed to set the signer: " + e)
+    displayErrorAndStop()
+    throw "A problem occured."
   }
 }
 
@@ -78,11 +91,14 @@ export async function addRule(ruleID: string) {
     var r: string = Handler.checkRoster() || Handler.checkDarc() || Handler.checkSigner();
     if (r != "") {
       console.log(r)
-      return
+      displayErrorAndStop()
+      throw "A problem occured."
     }
     await Handler.getInstance().AddRule(ruleID);
   } catch (e) {
     console.log("failed to add rule on DARC: " + e)
+    displayErrorAndStop()
+    throw "A problem occured."
   }
 }
 
@@ -91,15 +107,24 @@ export async function spawnWebPage(contractWebPageData: ContractWebPageData) {
     var r: string = Handler.checkRoster() || Handler.checkDarc() || Handler.checkSigner();
     if (r != "") {
       console.log(r)
-      return
+      displayErrorAndStop()
+      throw "A problem occured."
     }
     await Handler.getInstance().SpawnWebPage(contractWebPageData).then(
-      (r) => console.log("Here is the instance ID: " + r)
+      (r) => {
+        displayErrorAndStop()
+        throw "A problem occured."
+      }
     ).catch(
-      (e) => console.log("Failed to get the instance ID: " + e)
+      (e) => {
+        console.log("Failed to get the instance ID: " + e)
+        displayErrorAndStop()
+      }
     )
   } catch (e) {
     console.log("Failed to spawn webPage instance: " + e)
+    displayErrorAndStop()
+    throw "A problem occured."
   }
 }
 
@@ -108,18 +133,22 @@ export function printWebPageContract(instIDID: string) {
     var r: string = Handler.checkRoster() || Handler.checkDarc() || Handler.checkSigner();
     if (r != "") {
       console.log(r)
+      displayErrorAndStop();
       return
     }
     const instIDHolder = document.getElementById(instIDID) as HTMLInputElement
     const instIDStr = instIDHolder.value
     if (instIDStr == "") {
       Handler.prependLog("please provide an instance id")
-      return
+      displayErrorAndStop();
+      throw "A problem occured."
     }
 
     Handler.getInstance().PrintWebPage(Buffer.from(instIDStr, "hex"));
   } catch (e) {
     Handler.prependLog("failed to print webPage instance: " + e)
+    displayErrorAndStop();
+    throw "A problem occured."
   }
 }
 
@@ -131,9 +160,15 @@ export function PrintInfo(data: string) {
   const rpc = new Cothority.status.StatusRPC(r);
   rpc.getStatus(0).then(
     (r) => {
-      console.log(r.toString());
+      console.log(r.toString())
+      displayErrorAndStop()
+      throw "A problem occured."
     },
-    (e) => console.log("something went wrong. Did you start the conodes ?" + e)
+    (e) => {
+      console.log("something went wrong. Did you start the conodes ?" + e)
+      displayErrorAndStop()
+      throw "A problem occured."
+    }
   );
 }
 

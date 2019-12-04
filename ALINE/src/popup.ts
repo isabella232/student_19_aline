@@ -5,10 +5,13 @@ import {
   uploadTriggerTextForms,
   uploadSubmitTextForms,
   downloadContentOfWebpage,
-  downloadInfosOfAttestation
+  downloadInfosOfAttestation,
+  displayErrorAndStop
 } from "./AlineUtilities"
 
-
+//TODO: upload file -> voir example index.ts
+//TODO: checker : gros vu et croix + deux hash
+//TODO: simply Handler.roster
 //TODO: when uploading, compare actual url with contract url
 //TODO: Gestion erreur utilisateur ?
 export {
@@ -46,6 +49,7 @@ window.onload = function () {
 
         if (chrome.runtime.lastError) {
           console.log("There was an error injecting script : \n" + chrome.runtime.lastError.message);
+          displayErrorAndStop();
         }
       });
     }, false);
@@ -59,6 +63,7 @@ window.onload = function () {
   }, function () {
     if (chrome.runtime.lastError) {
       console.log("Error in script : \n" + chrome.runtime.lastError.message);
+      displayErrorAndStop();
     }
   });
 
