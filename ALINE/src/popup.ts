@@ -1,15 +1,18 @@
 import * as Cothority from "@dedis/cothority";
 import {
-  spawnWebPageContractWithParameters,
-  save_options, restore_options,
+  restore_options,
   uploadTriggerTextForms,
-  uploadSubmitTextForms,
-  downloadContentOfWebpage,
-  downloadInfosOfAttestation,
   startSelectorGadget,
   getSelectorAndCloseSelectorGadget,
   displayErrorForUser
 } from "./AlineUtilities"
+
+import {
+  spawnWebPageContractWithParameters,
+  uploadSubmitTextForms,
+  downloadContentOfWebpage,
+  downloadInfosOfAttestation
+} from "./AlineFeatures"
 
 //TODO: upload file -> voir example index.ts
 //TODO: checker : gros vu et croix + deux hash

@@ -79,7 +79,6 @@ export class Handler {
 
     async LoadRoster(data: string) {
         Handler.startLoader()
-        //TODO: To return and save for later !
         const roster = Cothority.network.Roster.fromTOML(data)
         const rpc = new Cothority.status.StatusRPC(roster)
         await rpc.getStatus(0).then(

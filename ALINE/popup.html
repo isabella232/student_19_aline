@@ -93,18 +93,18 @@
     .textonlydiv,
     .statusclass,
     .downloadbutton {
-      margin-top: 20px;
+      margin-top: 15px;
     }
 
     .statusclass {
       font-size: 16px;
-      margin-bottom: 20px;
+      margin-bottom: 15px;
     }
 
     .downloadbutton,
-    .loadinggif {
+    .loadinggif, .tick, .cross {
       visibility: hidden;
-      margin-top: 20px;
+      margin-top: 15px;
     }
 
     .mustalwaysbehidden {
@@ -166,12 +166,18 @@
 
 
     <form>
-      <input id="attestationidform" type="text" class="uploadfeature" name="attestationid" value="ID of attestation">
-      <input id="contentidform" type="file" class="uploadfeature" name="certifiedcontent" value="Content of webpage">
+      <input id="instanceid1" type="text" class="uploadfeature" name="attestationid" value="ID of attestation">
+      <input id="instanceid2" type="text" class="uploadfeature" name="certifiedcontent" value="Content of webpage">
       <div class="flex">
         <input id="submitbutton" type="button" class="uploadfeature" value="Submit">
       </div>
     </form>
+    <center>
+      <IMG id="tickid" class="tick" SRC="tick.jpg">
+       <IMG id="crossid" class="cross" SRC="cross.jpg">
+        <div class="statusclass" id="positiveanswer"></div>
+        <div class="statusclass" id="negativeanswer"></div>
+    </center>
 
     <label>
       <INPUT class="textonlydiv" type="checkbox" id="txtOnly">
