@@ -83,7 +83,7 @@ func TestSpawn(t *testing.T) {
 
 	// Check the values of each field
 	content := "I've been collecting MLP for more than 19 years, not including my childhood, so this is no small undertaking.  I'm hoping this will become a real highlight of my site.  I share everything I've learned while fixing up and restoring my collection, from my great successes to stupid mistakes. There's also a bit about me and my philosophies of pony collecting and restoring.  You'll also find my  sale and trade lists, links to my feedback, and anything else not directly related to the Preservation Project."
-	hashedContent := blake2b.Sum256([]byte(content))
+	hashedContent := blake2b.Sum256([]byte(content + time.Now().Format("01-02-2006")))
 
 	require.Equal(t, URLArg, result.URLWebPage)
 	require.Equal(t, hashedContent[:], result.HashedContent)

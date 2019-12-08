@@ -22,12 +22,9 @@ chrome.runtime.onMessage.addListener(
             if (isFull.localeCompare("full") == 0) {
                 sendResponse({ content: document.documentElement.innerHTML });
             } else {
-                console.log("content:\n")
-                console.log(document.querySelector(selector).innerHTML)
                 sendResponse({ content: document.querySelector(selector).innerHTML });
             }
         }
-
     });
 
 

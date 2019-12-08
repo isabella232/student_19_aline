@@ -120,10 +120,9 @@
       margin-top: 20px;
     }
 
-    .allinfosofcontract{
+    .allinfosofcontract {
       margin-left: 20px;
     }
-
   </style>
 </head>
 
@@ -149,48 +148,50 @@
         <FORM />
     </div>
     <div class="flex">
-        <FORM>
-          <INPUT Type="BUTTON" class="downloadbutton" id="downloadcontent"
-            Value="Download the content of this web page">
-          <FORM />
+      <FORM>
+        <INPUT Type="BUTTON" class="downloadbutton" id="downloadcontent" Value="Download the content of this web page">
+        <FORM />
     </div>
     <div class="flex">
-        <FORM>
-          <INPUT Type="BUTTON" class="downloadbutton" id="downloadinfos"
-            Value="Download the information of the attestation">
-          <FORM />
-      </div>
-      <div class="flex">
-        <FORM>
-          <INPUT Type="BUTTON" class="uploadbuttonc" id="uploadbutton" Value="Check your attestation">
-          <FORM />
-      </div>
-
-
-      <form>
-        <input id = "attestationidform" type="text" class="uploadfeature" name="attestationid" value="ID of attestation">
-        <input id = "contentidform" type="text" class="uploadfeature" name="certifiedcontent" value="Content of webpage">
-        <div class="flex">
-        <input id = "submitbutton" type="button" class="uploadfeature" value="Submit">
-        </div>
-      </form>
-
-      <label>
-        <INPUT class="textonlydiv" type="checkbox" id="txtOnly">
-        Text only (without HTML)
-      </label>
+      <FORM>
+        <INPUT Type="BUTTON" class="downloadbutton" id="downloadinfos"
+          Value="Download the information of the attestation">
+        <FORM />
+    </div>
+    <div class="flex">
+      <FORM>
+        <INPUT Type="BUTTON" class="uploadbuttonc" id="uploadbutton" Value="Check your attestation">
+        <FORM />
     </div>
 
-    <center>
-      <IMG id="loadinggifid" class="loadinggif" SRC="loading_spinner.gif">
-      <div class="statusclass" id="status"></div>
-    </center>
-    <div class ="allinfosofcontract" id="infosofcontract"></div>
+
+    <form>
+      <input id="attestationidform" type="text" class="uploadfeature" name="attestationid" value="ID of attestation">
+      <input id="contentidform" type="file" class="uploadfeature" name="certifiedcontent" value="Content of webpage">
+      <div class="flex">
+        <input id="submitbutton" type="button" class="uploadfeature" value="Submit">
+      </div>
+    </form>
+
+    <label>
+      <INPUT class="textonlydiv" type="checkbox" id="txtOnly">
+      Text only (without HTML)
+    </label>
+  </div>
+
+  <center>
+    <IMG id="loadinggifid" class="loadinggif" SRC="loading_spinner.gif">
+    <div class="statusclass" id="status"></div>
+  </center>
+  <div class="allinfosofcontract" id="infosofcontract"></div>
   </div>
   <div id="loader"></div>
   <div id='message'></div>
+  <div id='content1'></div>
   <div class="mustalwaysbehidden" id='sectionorfull'></div>
   <div class="mustalwaysbehidden" id='cssselector'></div>
+  <div class="mustalwaysbehidden" id='instanceid'></div>
+
 </body>
 
 </html>

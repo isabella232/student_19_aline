@@ -8,7 +8,8 @@ import { Message, Properties } from "protobufjs/light";
  */
 export class ContractWebPageData extends Message<ContractWebPageData> {
     URLWebPage: string;
-    Content: Buffer;
+    HashedContent: Buffer;
+    Content: string;
     Selector: string;
     CreationDate: string;
     TextOnly: boolean;
@@ -17,7 +18,8 @@ export class ContractWebPageData extends Message<ContractWebPageData> {
         super(props);
 
         this.URLWebPage = this.URLWebPage || "No URL has been found.";
-        this.Content = Buffer.from(this.Content || EMPTY_BUFFER);
+        this.HashedContent = Buffer.from(this.HashedContent || EMPTY_BUFFER);
+        this.Content = this.Content|| "No content has been found";
         this.Selector = this.Selector|| "No selector has been found";
         this.CreationDate = this.CreationDate || "No creation date has been found";
         this.TextOnly = this.TextOnly || true;
@@ -34,7 +36,7 @@ export class ContractWebPageData extends Message<ContractWebPageData> {
         res += "\n";
         res += "URL: " + this.URLWebPage;
         res += "\n";
-        res += "Hashed content: " + this.Content.toString("hex");
+        res += "Hashed content: " + this.HashedContent.toString("hex");
         res += "\n";
         res += "Selector: " + this.Selector;
         res += "\n";
@@ -50,7 +52,7 @@ export class ContractWebPageData extends Message<ContractWebPageData> {
         res += "\n";
         res += "URL: " + this.URLWebPage;
         res += "\n";
-        res += "Hashed content: " + this.Content.toString("hex");
+        res += "Hashed content: " + this.HashedContent.toString("hex");
         res += "\n";
         res += "Selector: " + this.Selector;
         res += "\n";

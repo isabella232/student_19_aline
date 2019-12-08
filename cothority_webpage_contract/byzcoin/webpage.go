@@ -2,7 +2,6 @@ package byzcoin
 
 import (
 	"net/http"
-	"fmt"
 	"time"
 
 	"github.com/PuerkitoBio/goquery"
@@ -93,10 +92,12 @@ func (c *contractWebPage) Spawn(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Inst
 	}
 
 	// Store the hashed content of the page, the date and the selector in the contract
-	fmt.Println(content)
-	hashedContent := blake2b.Sum256([]byte(content))
+	todaysDate := time.Now().Format("01-02-2006")
+	hashedContent := blake2b.Sum256([]byte(content + todaysDate))
+	
 	cs.HashedContent = hashedContent[:]
-	cs.CreationDate = time.Now().Format("01-02-2006")
+	cs.Content = content
+	cs.CreationDate = todaysDate
 	cs.Selector = selector
 	cs.TextOnly = textOnly
 

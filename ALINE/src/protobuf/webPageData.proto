@@ -9,8 +9,9 @@ option java_outer_classname = "WebPageProto";
 // system that needs to return always the same state.
 message ContractWebPageData {
   required string URLWebPage = 1;
-  required bytes Content = 2;
-  required string Selector = 3;
-  required string CreationDate = 4;
-  required bool TextOnly = 5;
+  required bytes HashedContent = 2;
+  required string Content = 3;
+  required string Selector = 4;
+  required string CreationDate = 5;
+  required bool TextOnly = 6;
 }

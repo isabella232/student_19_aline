@@ -6,14 +6,14 @@ import {
   uploadSubmitTextForms,
   downloadContentOfWebpage,
   downloadInfosOfAttestation,
-  displayErrorAndStop
+  startSelectorGadget,
+  getSelectorAndCloseSelectorGadget,
+  displayErrorForUser
 } from "./AlineUtilities"
 
 //TODO: upload file -> voir example index.ts
 //TODO: checker : gros vu et croix + deux hash
 //TODO: simply Handler.roster
-//TODO: when uploading, compare actual url with contract url
-//TODO: Gestion erreur utilisateur ?
 export {
   Cothority
 };
@@ -41,17 +41,7 @@ window.onload = function () {
   var checkPageSectionButton = document.getElementById('pagesection');
   if (checkPageSectionButton) {
     checkPageSectionButton.addEventListener('click', function () {
-      save_options();
-      alert("Please click on the desired section of the webpage, then click on the extension icon again.\n")
-      chrome.tabs.executeScript(null, {
-        file: "./scripts/startSelectorGadget.js"
-      }, function () {
-
-        if (chrome.runtime.lastError) {
-          console.log("There was an error injecting script : \n" + chrome.runtime.lastError.message);
-          displayErrorAndStop();
-        }
-      });
+    startSelectorGadget();
     }, false);
   }
 
@@ -63,37 +53,14 @@ window.onload = function () {
   }, function () {
     if (chrome.runtime.lastError) {
       console.log("Error in script : \n" + chrome.runtime.lastError.message);
-      displayErrorAndStop();
+      displayErrorForUser();
     }
   });
 
   // Check if Selector Gadget is running. 
   // If yes, also grab the selector and trigger the contract spawning
   chrome.extension.onRequest.addListener(function (request, sender, sendResponse) {
-    // Retrieve CSS Selector
-    var pageSectionSelector = request.CSSSelector
-    document.getElementById('cssselector').innerText = pageSectionSelector;
-
-    // After we retrieve the CSS selector, we close Selector Gadget
-    var files = [
-      './scripts/jquery-3.4.1.js',
-      './scripts/closeSelectorGadget.js',
-    ];
-
-    for (var file of files) {
-      chrome.tabs.executeScript({
-        file: file,
-        allFrames: true,
-      });
-    }
-
-    // Restaure Text Only check box value
-    restore_options();
-
-    // Spawn the contract
-    spawnWebPageContractWithParameters(pageSectionSelector);
-    document.getElementById('sectionorfull').innerText = "section";
-
+    getSelectorAndCloseSelectorGadget(request.CSSSelector);
   });
 
   /*---------------------------------------------------------------------

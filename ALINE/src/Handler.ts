@@ -1,7 +1,7 @@
 import * as Cothority from "@dedis/cothority";
 import { WebPageInstance } from "./WebPageInstance";
 import { ContractWebPageData } from "./ContractWebPageData"
-import { displayErrorAndStop } from "./AlineUtilities"
+import { displayErrorForUser } from "./AlineUtilities"
 
 // ----------------------------------------------------------------------------
 // The Handler class is a singleton that offers methods to talk to the cothority
@@ -49,7 +49,7 @@ export class Handler {
 
     static checkDarc(): string {
         if (Handler.darc === undefined) {
-            displayErrorAndStop()
+            displayErrorForUser()
             return "DARC not set. Please load a DARC first"
         }
         return ""
@@ -57,7 +57,7 @@ export class Handler {
 
     static checkSigner(): string {
         if (Handler.signer === undefined) {
-            displayErrorAndStop()
+            displayErrorForUser()
             return "Signer not set. Please set a signer first"
         }
         return ""
@@ -90,7 +90,7 @@ export class Handler {
             },
             (e) => {
                 console.log("failed to load roster: " + e)
-                displayErrorAndStop()
+                displayErrorForUser()
             }
         ).finally(
             () => {
@@ -110,7 +110,7 @@ export class Handler {
                 console.log("darc loaded:\n" + Handler.darc.toString())
             },
             (e) => {
-                displayErrorAndStop()
+                displayErrorForUser()
                 console.log("failed to get the genesis darc: " + e)
             }
         ).finally(
@@ -124,7 +124,7 @@ export class Handler {
             var signer = Cothority.darc.SignerEd25519.fromBytes(sid)
             Handler.signer = signer
         } catch (e) {
-            displayErrorAndStop()
+            displayErrorForUser()
             console.log("failed to create signer: " + e)
         }
         console.log("signer '" + signer.toString() + "' set")
@@ -150,7 +150,7 @@ export class Handler {
                             },
                             (e) => {
                                 console.log("failed to evolve the darc instance: " + e)
-                                displayErrorAndStop()
+                                displayErrorForUser()
                             }
                         ).finally(
                             () => {
@@ -161,14 +161,14 @@ export class Handler {
                     (e) => {
                         Handler.stopLoader()
                         console.log("failed to get the darc instance")
-                        displayErrorAndStop()
+                        displayErrorForUser()
                     }
                 )
             },
             (e) => {
                 Handler.stopLoader()
                 console.log("failed to create RPC: " + e)
-                displayErrorAndStop()
+                displayErrorForUser()
             }
         )
     }
@@ -183,6 +183,7 @@ export class Handler {
                 await WebPageInstance.spawn(r, Handler.darc.getBaseID(), [Handler.signer], "webPageArgs", Buffer.from(ContractWebPageData.encode(contractWebPageData).finish())).then(
                     (webPageInstance: WebPageInstance) => {
                         document.getElementById('infosofcontract').innerText = webPageInstance.toStringForUsers() + "\nInstance ID: " + webPageInstance.id.toString("hex")
+                        document.getElementById('instanceid').innerText = webPageInstance.id.toString("hex")
                     },
                     (e: Error) => {
                         console.error(e)
@@ -192,7 +193,7 @@ export class Handler {
                 ).finally(
                     () => {
                         Handler.stopLoader()
-                        displayErrorAndStop()
+                        displayErrorForUser()
                     }
                 )
             },
@@ -217,12 +218,12 @@ export class Handler {
                         console.log("got the proof, let's check it...")
                         if (!proof.exists(instIDStr)) {
                             console.log("this is not a proof of existence... aborting!")
-                            displayErrorAndStop();
+                            displayErrorForUser();
                             return
                         }
                         if (!proof.matchContract(WebPageInstance.contractID)) {
                             console.log("this is not a proof for the webPage contrac... aborting!")
-                            displayErrorAndStop();
+                            displayErrorForUser();
                             return
                         }
                         console.log("ok, now let's decode it...")
@@ -233,7 +234,7 @@ export class Handler {
                     (e) => {
                         console.error(e)
                         Handler.prependLog("Failed to get the contract web page instance: " + e)
-                        displayErrorAndStop();
+                        displayErrorForUser();
                     }
                 ).finally(
                     () => Handler.stopLoader()
@@ -242,7 +243,7 @@ export class Handler {
             (e) => {
                 Handler.stopLoader()
                 console.log("failed to create RPC: " + e)
-                displayErrorAndStop();
+                displayErrorForUser();
             }
         )
     }
