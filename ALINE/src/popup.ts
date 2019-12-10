@@ -14,9 +14,6 @@ import {
   downloadInfosOfAttestation
 } from "./AlineFeatures"
 
-//TODO: upload file -> voir example index.ts
-//TODO: checker : gros vu et croix + deux hash
-//TODO: simply Handler.roster
 export {
   Cothority
 };
@@ -78,6 +75,7 @@ window.onload = function () {
 
   if (checkDownloadContentButton) {
     checkDownloadContentButton.addEventListener('click', function () {
+      document.getElementById('loadinggifid').style.visibility = "visible";
       downloadContentOfWebpage();
     }, false);
   }
@@ -111,6 +109,7 @@ window.onload = function () {
   var checkSubmitButton = document.getElementById('submitbutton');
   if (checkSubmitButton) {
     checkSubmitButton.addEventListener('click', function () {
+      document.getElementById('loadinggifid').style.visibility = "visible";
       uploadSubmitTextForms();
     }, false);
   }

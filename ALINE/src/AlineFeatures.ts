@@ -77,10 +77,19 @@ export async function spawnWebPageContractWithParameters(selector: string) {
  | Upload feature - Submit text forms
  *-------------------------------------------------------------------*/
 export async function uploadSubmitTextForms() {
-  var instanceIDString1Elem = document.getElementById('instanceid1') as HTMLInputElement;
-  var instanceIDString1 = instanceIDString1Elem.value;
-  var instanceIDString2Elem = document.getElementById('instanceid2') as HTMLInputElement;
-  var instanceIDString2 = instanceIDString2Elem.value;
+  //Hide potential previous answer
+  document.getElementById('tickid').style.visibility = "hidden";
+  document.getElementById('crossid').style.visibility = "hidden";
+  document.getElementById('positiveanswer').style.display = "none";
+  document.getElementById('negativeanswer').style.display = "none";
+
+  // Retrieve text forms
+  var instanceIDStringElem = document.getElementById('uploadinstanceid') as HTMLInputElement;
+  var instanceIDString = instanceIDStringElem.value;
+  var contentElem = document.getElementById('uploadcontentid') as HTMLInputElement;
+  var content = contentElem.value;
+  //alert(blake2b.BYTES_MAX);
+  //TODO: BLAKE2B PROBLEM
 
   Handler.startLoader();
   console.log("creating an RPC to get the key value instance...");
@@ -88,72 +97,45 @@ export async function uploadSubmitTextForms() {
   rpc.then(
     (r) => {
       console.log("RPC created, we now send a get proof request...");
-      /*---------------------------------------------------------------------
-      |  INSTANCE # 1
-      *-------------------------------------------------------------------*/
-      r.getProofFromLatest(Buffer.from(hexStringToByte(instanceIDString1))).then(
+      r.getProofFromLatest(Buffer.from(hexStringToByte(instanceIDString))).then(
         (proof) => {
           console.log("got the proof, let's check it...");
-          if (!proof.exists(Buffer.from(hexStringToByte(instanceIDString1)))) {
+          if (!proof.exists(Buffer.from(hexStringToByte(instanceIDString)))) {
             console.log("this is not a proof of existence... aborting!");
+            displayErrorForUser();
             return;
           }
           if (!proof.matchContract(WebPageInstance.contractID)) {
             console.log("this is not a proof for the webpagecontrac... aborting!");
+            displayErrorForUser();
             return;
           }
           console.log("ok, now let's decode it...");
-          const webpageInstance1 = ContractWebPageData.decode(proof.value);
-          console.log("here is the webpage instance: \n" + webpageInstance1.toString());
-          /*---------------------------------------------------------------------
-          |  INSTANCE # 2
-          *-------------------------------------------------------------------*/
-          r.getProofFromLatest(Buffer.from(hexStringToByte(instanceIDString2))).then(
-            (proof) => {
-              console.log("got the proof, let's check it...");
-              if (!proof.exists(Buffer.from(hexStringToByte(instanceIDString2)))) {
-                console.log("this is not a proof of existence... aborting!");
-                return;
-              }
-              if (!proof.matchContract(WebPageInstance.contractID)) {
-                console.log("this is not a proof for the webpagecontrac... aborting!");
-                return;
-              }
-           /*---------------------------------------------------------------------
-          |  Comparison of the two hashes - beginning
-          *-------------------------------------------------------------------*/
-              console.log("ok, now let's decode it...");
-              const webpageInstance2 = ContractWebPageData.decode(proof.value);
-              console.log("here is the webpage instance: \n" + webpageInstance2.toString());
+          const webpageInstance = ContractWebPageData.decode(proof.value);
+          console.log("here is the webpage instance: \n" + webpageInstance.toString());
 
-              console.log("Hash of 1st instance: "+ webpageInstance1.HashedContent.toString("hex"));
-              console.log("Hash of 2nd instance: "+ webpageInstance2.HashedContent.toString("hex"));
-              // We compare the two hashes
-              if (webpageInstance1.HashedContent.toString("hex").localeCompare(webpageInstance2.HashedContent.toString("hex")) == 0) {
-                document.getElementById('tickid').style.visibility = "visible";
-                document.getElementById('positiveanswer').innerText = "The content of this webpage has not changed !";
-                document.getElementById('positiveanswer').style.display = "inline";
-    
-              } else {
-                document.getElementById('crossid').style.visibility = "visible";
-                document.getElementById('negativeanswer').innerText = "The content of this webpage has changed !";
-                document.getElementById('negativeanswer').style.display = "inline";
-              }
-           /*---------------------------------------------------------------------
-          |  Comparison of the two hashes - end
-          *-------------------------------------------------------------------*/
-            },
-            (e: Error) => {
-              console.error(e);
-              console.log("failed to get the key value instance: " + e);
-            },
-          ).finally(
-            () => Handler.stopLoader(),
-          );
+          /*---------------------------------------------------------------------
+         | Comparison of the two hashes
+         *-------------------------------------------------------------------*/
+        //webpageInstance.HashedContent.toString("hex")
+          if (webpageInstance.Content.localeCompare(content) == 0) {
+            document.getElementById('loadinggifid').style.visibility = "hidden";
+            document.getElementById('tickid').style.visibility = "visible";
+            document.getElementById('positiveanswer').innerText = "The content of this webpage has been correctly verified !";
+            document.getElementById('positiveanswer').style.display = "inline";
+
+          } else {
+            document.getElementById('loadinggifid').style.visibility = "hidden";
+            document.getElementById('crossid').style.visibility = "visible";
+            document.getElementById('negativeanswer').innerText = "The content of this webpage is not the same !";
+            document.getElementById('negativeanswer').style.display = "inline";
+          }
         },
         (e: Error) => {
           console.error(e);
           console.log("failed to get the key value instance: " + e);
+          displayErrorForUser();
+          throw "A problem occured.";
         },
       ).finally(
         () => Handler.stopLoader(),
@@ -162,6 +144,8 @@ export async function uploadSubmitTextForms() {
     (e) => {
       Handler.stopLoader();
       console.log("failed to create RPC: " + e);
+      displayErrorForUser();
+      throw "A problem occured.";
     },
   );;
 }
@@ -187,10 +171,12 @@ export async function downloadContentOfWebpage() {
             console.log("got the proof, let's check it...");
             if (!proof.exists(Buffer.from(hexStringToByte(instanceIDString)))) {
               console.log("this is not a proof of existence... aborting!");
+              displayErrorForUser();
               return;
             }
             if (!proof.matchContract(WebPageInstance.contractID)) {
               console.log("this is not a proof for the webpagecontrac... aborting!");
+              displayErrorForUser();
               return;
             }
             console.log("ok, now let's decode it...");
@@ -201,10 +187,13 @@ export async function downloadContentOfWebpage() {
               url: URL.createObjectURL(blob),
               filename: "Content of website " + domain
             });
+            document.getElementById('loadinggifid').style.visibility = "hidden"
           },
           (e: Error) => {
             console.error(e);
             console.log("failed to get the key value instance: " + e);
+            displayErrorForUser();
+            throw "A problem occured.";
           },
         ).finally(
           () => Handler.stopLoader(),
@@ -213,6 +202,8 @@ export async function downloadContentOfWebpage() {
       (e) => {
         Handler.stopLoader();
         console.log("failed to create RPC: " + e);
+        displayErrorForUser();
+        throw "A problem occured.";
       },
     );
   });

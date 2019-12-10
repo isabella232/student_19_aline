@@ -25,8 +25,8 @@ export function restore_options() {
 }
 
 export async function uploadTriggerTextForms() {
-  document.getElementById('instanceid1').style.display = "inline";
-  document.getElementById('instanceid2').style.display = "inline";
+  document.getElementById('uploadinstanceid').style.display = "inline";
+  document.getElementById('uploadcontentid').style.display = "inline";
   document.getElementById('submitbutton').style.display = "inline";
 }
 
