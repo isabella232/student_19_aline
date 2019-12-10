@@ -10,6 +10,11 @@ export {
   Cothority
 };
 
+//TODO: mettre le require en haut du fichier
+//@ts-ignore
+//import blake2 = require('blake2');
+var blake = require('blakejs')
+console.log(blake.blake2bHex('abc'))
 /*---------------------------------------------------------------------
  |  Spawn contract with correct parameters
  *-------------------------------------------------------------------*/
@@ -88,8 +93,31 @@ export async function uploadSubmitTextForms() {
   var instanceIDString = instanceIDStringElem.value;
   var contentElem = document.getElementById('uploadcontentid') as HTMLInputElement;
   var content = contentElem.value;
-  //alert(blake2b.BYTES_MAX);
+
+
+
   //TODO: BLAKE2B PROBLEM
+  // TODO: FACTORIZE AND INITIALIZE WHEN POP UP OPENS
+  var skipChainID = "8653fd3407a680dc41b569afcd329f61d0a0e528e66158d4cc3fc593d9d8e0fa";
+  var privateKey = "ef31a12194cf70b960644d010e12a77a874bcc16ed20af3224a5ac40ad82ea03";
+
+  // Retrieve URL of current webpage
+
+  // Retrieve TextOnly field
+
+
+  // Get public.toml
+  try {
+    await Handler.getInstance().LoadRoster(roster);
+  } catch (e) {
+
+  }
+  // Skip chain ID
+  await getDarc(skipChainID);
+
+  // Private Key
+  await loadSigner(privateKey);
+
 
   Handler.startLoader();
   console.log("creating an RPC to get the key value instance...");
@@ -117,8 +145,20 @@ export async function uploadSubmitTextForms() {
           /*---------------------------------------------------------------------
          | Comparison of the two hashes
          *-------------------------------------------------------------------*/
-        //webpageInstance.HashedContent.toString("hex")
-          if (webpageInstance.Content.localeCompare(content) == 0) {
+          //webpageInstance.HashedContent.toString("hex")
+          var OUTPUT_LENGTH = 32 // bytes
+          var context = blake.blake2bInit(OUTPUT_LENGTH, null)
+          // each time you get a byte array from the stream:
+          var enc = new TextEncoder(); // always utf-8
+          console.log(enc.encode(content));
+          blake.blake2bUpdate(context, enc.encode(content));
+          // finally, once the stream has been exhausted
+          var hashToCheck = Buffer.from(blake.blake2bFinal(context)).toString("hex");
+          console.log("1st hash :");
+          console.log(hashToCheck);
+          console.log("2nd hash: ");
+          console.log(webpageInstance.HashedContent.toString("hex"));
+          if (webpageInstance.HashedContent.toString("hex").localeCompare(hashToCheck) == 0) {
             document.getElementById('loadinggifid').style.visibility = "hidden";
             document.getElementById('tickid').style.visibility = "visible";
             document.getElementById('positiveanswer').innerText = "The content of this webpage has been correctly verified !";

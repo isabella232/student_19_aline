@@ -14,6 +14,10 @@ import {
   downloadInfosOfAttestation
 } from "./AlineFeatures"
 
+//@ts-ignore
+//import blake2 = require('blake2');
+var blake = require('blakejs')
+
 export {
   Cothority
 };

@@ -12,7 +12,8 @@
   "license": "ISC",
   "dependencies": {
     "@dedis/cothority": "^3.1.9",
-    "blake2b": "^2.1.3",
+    "blake2": "^4.0.0",
+    "blakejs": "^1.1.0",
     "jquery": "^3.4.1"
   },
   "devDependencies": {
