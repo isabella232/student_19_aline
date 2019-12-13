@@ -1,9 +1,16 @@
 import * as Cothority from "@dedis/cothority";
 import { spawnWebPageContractWithParameters } from "./AlineFeatures";
+import { hexStringToByte } from "./CothorityUtilities";
+import { ContractWebPageData } from "./ContractWebPageData"
+import { Handler } from "./Handler";
+import { WebPageInstance } from './WebPageInstance';
+
 
 export {
   Cothority
 };
+
+var blake = require('blakejs')
 
 // Save checkbox value inbetween extension reloadings
 export function save_options() {
@@ -26,7 +33,6 @@ export function restore_options() {
 
 export async function uploadTriggerTextForms() {
   document.getElementById('uploadinstanceid').style.display = "inline";
-  document.getElementById('uploadcontentid').style.display = "inline";
   document.getElementById('submitbutton').style.display = "inline";
 }
 
@@ -78,3 +84,130 @@ export async function decodeHTML(html: string) {
   txt.innerHTML = html;
   return txt.value;
 };
+
+export async function getInstanceAndCompare(contentToCompare: string, instanceIDString: string) {
+
+  Handler.startLoader();
+  console.log("creating an RPC to get the key value instance...");
+  const rpc = Cothority.byzcoin.ByzCoinRPC.fromByzcoin(Handler.roster, Handler.scid);
+  rpc.then(
+    (r) => {
+      console.log("RPC created, we now send a get proof request...");
+      r.getProofFromLatest(Buffer.from(hexStringToByte(instanceIDString))).then(
+        (proof) => {
+          console.log("got the proof, let's check it...");
+          if (!proof.exists(Buffer.from(hexStringToByte(instanceIDString)))) {
+            console.log("this is not a proof of existence... aborting!");
+            document.getElementById('status').innerText = "This ID does not exist. Please try with another attestation ID.\n\n"
+            document.getElementById('loadinggifid').style.visibility = "hidden"
+            return;
+          }
+          if (!proof.matchContract(WebPageInstance.contractID)) {
+            console.log("this is not a proof for the webpagecontract... aborting!");
+            displayErrorForUser();
+            return;
+          }
+          console.log("ok, now let's decode it...");
+          const webpageInstance = ContractWebPageData.decode(proof.value);
+          console.log("here is the webpage instance: \n" + webpageInstance.toString());
+
+          /*---------------------------------------------------------------------
+         | Comparison of the two hashes
+         *-------------------------------------------------------------------*/
+          var OUTPUT_LENGTH = 32 // bytes
+          var context = blake.blake2bInit(OUTPUT_LENGTH, null)
+
+          var enc = new TextEncoder(); // always utf-8
+          console.log(enc.encode(contentToCompare));
+          blake.blake2bUpdate(context, enc.encode(contentToCompare));
+
+          // finally, once the stream has been exhausted
+          var hashToCheck = Buffer.from(blake.blake2bFinal(context)).toString("hex");
+          console.log("1st hash :");
+          console.log(hashToCheck);
+          console.log("2nd hash: ");
+          console.log(webpageInstance.HashedContent.toString("hex"));
+
+          if (webpageInstance.HashedContent.toString("hex").localeCompare(hashToCheck) == 0) {
+            document.getElementById('loadinggifid').style.visibility = "hidden";
+            document.getElementById('tickid').style.visibility = "visible";
+            document.getElementById('positiveanswer').innerText = "The content of this attestation has been correctly verified !";
+            document.getElementById('positiveanswer').style.display = "inline";
+            document.getElementById('status').innerText = "";
+
+          } else {
+            document.getElementById('loadinggifid').style.visibility = "hidden";
+            document.getElementById('crossid').style.visibility = "visible";
+            document.getElementById('negativeanswer').innerText = "The provided content does not match with the attestation !";
+            document.getElementById('negativeanswer').style.display = "inline";
+            document.getElementById('status').innerText = "";
+          }
+        },
+        (e: Error) => {
+          console.error(e);
+          console.log("failed to get the key value instance: " + e);
+          displayErrorForUser();
+          throw "A problem occured.";
+        },
+      ).finally(
+        () => Handler.stopLoader(),
+      );
+    },
+    (e) => {
+      Handler.stopLoader();
+      console.log("failed to create RPC: " + e);
+      displayErrorForUser();
+      throw "A problem occured.";
+    },
+  );
+}
+
+export function RetrieveContentOfAttestation(domain: string, instanceIDString: string){
+  Handler.startLoader();
+  console.log("creating an RPC to get the key value instance...");
+  const rpc = Cothority.byzcoin.ByzCoinRPC.fromByzcoin(Handler.roster, Handler.scid);
+  rpc.then(
+    (r) => {
+      console.log("RPC created, we now send a get proof request...");
+      r.getProofFromLatest(Buffer.from(hexStringToByte(instanceIDString))).then(
+        (proof) => {
+          console.log("got the proof, let's check it...");
+          if (!proof.exists(Buffer.from(hexStringToByte(instanceIDString)))) {
+            console.log("this is not a proof of existence... aborting!");
+            displayErrorForUser();
+            return;
+          }
+          if (!proof.matchContract(WebPageInstance.contractID)) {
+            console.log("this is not a proof for the webpagecontrac... aborting!");
+            displayErrorForUser();
+            return;
+          }
+          console.log("ok, now let's decode it...");
+          const webpageInstance = ContractWebPageData.decode(proof.value);
+          console.log("here is the webpage instance: \n" + webpageInstance.toString());
+          var blob = new Blob(["Instance ID:" + instanceIDString + " and Content:" + webpageInstance.Content], { type: "text/plain" });
+          chrome.downloads.download({
+            url: URL.createObjectURL(blob),
+            filename: "Content of website " + domain
+          });
+          document.getElementById('loadinggifid').style.visibility = "hidden";
+          document.getElementById('status').innerText = "Download completed !";
+        },
+        (e: Error) => {
+          console.error(e);
+          console.log("failed to get the key value instance: " + e);
+          displayErrorForUser();
+          throw "A problem occured.";
+        },
+      ).finally(
+        () => Handler.stopLoader(),
+      );
+    },
+    (e) => {
+      Handler.stopLoader();
+      console.log("failed to create RPC: " + e);
+      displayErrorForUser();
+      throw "A problem occured.";
+    },
+  );
+}
