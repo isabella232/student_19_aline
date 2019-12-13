@@ -14,16 +14,13 @@ import {
   downloadInfosOfAttestation
 } from "./AlineFeatures"
 
-//@ts-ignore
-//import blake2 = require('blake2');
-var blake = require('blakejs')
-
 export {
   Cothority
 };
 
 window.onload = function () {
 
+  
   document.addEventListener('DOMContentLoaded', restore_options);
 
   /*---------------------------------------------------------------------
@@ -80,6 +77,7 @@ window.onload = function () {
   if (checkDownloadContentButton) {
     checkDownloadContentButton.addEventListener('click', function () {
       document.getElementById('loadinggifid').style.visibility = "visible";
+      document.getElementById('status').innerText = "Your download will begin in a few seconds ...";
       downloadContentOfWebpage();
     }, false);
   }
@@ -114,6 +112,7 @@ window.onload = function () {
   if (checkSubmitButton) {
     checkSubmitButton.addEventListener('click', function () {
       document.getElementById('loadinggifid').style.visibility = "visible";
+      document.getElementById('status').innerText = "Your attestation is currently being verified. Please do not click anywhere.";
       uploadSubmitTextForms();
     }, false);
   }
