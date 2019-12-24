@@ -8,7 +8,7 @@ This project consists of, first, writing a smart contract in Go that communicate
 
 ## How to use ALINE
 
-![Alt text](/ALINE/icon.png?raw=true "Title" =100x20)
+![Alt text](/ALINE/icon.png =100x20)
 
 ### Start the conodes
 
