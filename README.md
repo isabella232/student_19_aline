@@ -53,3 +53,7 @@ $ npm run build
 ### Load the plugin
 
 In your Chrome browser, go to `chrome://extensions/` and select “Load unpacked”. There you can load the `ALINE/` folder.
+
+### Use the plugin
+
+Once the previous step performed, you just have to click on the icon in the right up-corner of your screen while being on the webpage you want to certify.
