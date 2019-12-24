@@ -8,6 +8,8 @@ This project consists of, first, writing a smart contract in Go that communicate
 
 ## How to use ALINE
 
+![Alt text](/ALINE/icon.png?raw=true "Title")
+
 ### Start the conodes
 
 ```bash
