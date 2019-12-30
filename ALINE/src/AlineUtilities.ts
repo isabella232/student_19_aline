@@ -188,7 +188,7 @@ export function RetrieveContentOfAttestation(domain: string, instanceIDString: s
           console.log("ok, now let's decode it...");
           const webpageInstance = ContractWebPageData.decode(proof.value);
           console.log("here is the webpage instance: \n" + webpageInstance.toString());
-          var blob = new Blob(["Instance ID:" + instanceIDString + " and Content:" + webpageInstance.Content], { type: "text/plain" });
+          var blob = new Blob(["Instance ID: " + instanceIDString + "\n" + webpageInstance.Content], { type: "text/plain" });
           chrome.downloads.download({
             url: URL.createObjectURL(blob),
             filename: "Content of website " + domain
