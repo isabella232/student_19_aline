@@ -38,6 +38,8 @@ export class ContractWebPageData extends Message<ContractWebPageData> {
         res += "\n";
         res += "Hashed content: " + this.HashedContent.toString("hex");
         res += "\n";
+        res += "Content: " + this.Content;
+        res += "\n";
         res += "Selector: " + this.Selector;
         res += "\n";
         res += "Creation Date: " + this.CreationDate;
