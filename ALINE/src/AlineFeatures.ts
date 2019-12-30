@@ -99,13 +99,13 @@ export async function uploadSubmitTextForms() {
   // Retrieve text forms
   var textAreaContentElem = document.getElementById('uploadinstanceid') as HTMLInputElement;
   var textAreaContentString = textAreaContentElem.value;
-  var instanceIDString = textAreaContentString.split("Instance ID:")[1].trim().split(" and Content:")[0].trim();
-  var content = textAreaContentString.split("Content:")[1].trim()
-  console.log("ID:");
+  var instanceIDString = textAreaContentString.split("Instance ID: ")[1].trim().split("\n")[0].trim();
+  var contentToCompare = textAreaContentString.split("\n").splice(1,).join("\n")
+  console.log("Instance ID:");
   console.log(instanceIDString);
   console.log("Content:");
-  console.log(content);
-  getInstanceAndCompare(content, instanceIDString);
+  console.log(contentToCompare);
+  getInstanceAndCompare(contentToCompare, instanceIDString);
 }
 
 export async function downloadContentOfWebpage() {
