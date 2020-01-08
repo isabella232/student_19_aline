@@ -118,7 +118,7 @@ export async function getInstanceAndCompare(contentToCompare: string, instanceID
           var context = blake.blake2bInit(OUTPUT_LENGTH, null)
 
           var enc = new TextEncoder(); // always utf-8
-          blake.blake2bUpdate(context, enc.encode(contentToCompare));
+          blake.blake2bUpdate(context, enc.encode(contentToCompare + webpageInstance.CreationDate));
           console.log("Is going to be hashed:");
           console.log(contentToCompare);
 

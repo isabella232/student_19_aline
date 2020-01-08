@@ -94,7 +94,7 @@ func (c *contractWebPage) Spawn(rst byzcoin.ReadOnlyStateTrie, inst byzcoin.Inst
 
 	// Store the hashed content of the page, the date and the selector in the contract
 	todaysDate := time.Now().Format("01-02-2006")
-	hashedContent := blake2b.Sum256([]byte(content))
+	hashedContent := blake2b.Sum256([]byte(content + todaysDate))
 	fmt.Println("To Hash:")
 	fmt.Println(content + todaysDate)
 	cs.HashedContent = hashedContent[:]
