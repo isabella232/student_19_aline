@@ -1,0 +1,41 @@
+\documentclass[11pt, a4paper, twoside, openright]{article} %draft
+\usepackage{graphicx,color}
+\usepackage{amssymb, amsmath, array}
+\usepackage{biblatex}
+\usepackage{textcomp}
+\usepackage{array}
+\usepackage{tabu}
+\usepackage{float}
+\usepackage[center]{caption}
+\usepackage{hyperref}
+\usepackage[export]{adjustbox}
+% (1) choose a font that is available as T1
+% for example:
+\usepackage{lmodern}
+
+% (2) specify encoding
+\usepackage[T1]{fontenc}
+
+% (3) load symbol definitions
+\addbibresource{refs.bib}
+
+
+\begin{document}
+
+\input{cover}
+
+\newpage
+\thispagestyle{empty}
+\tableofcontents{\protect\thispagestyle{empty}}
+\newpage
+        
+% Start page count
+\setcounter{page}{1}
+
+\input{intro.tex}
+\input{implementation.tex}
+\input{ending.tex}
+
+\newpage
+\printbibliography
+\end{document}

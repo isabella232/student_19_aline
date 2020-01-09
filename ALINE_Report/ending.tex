@@ -1,0 +1,35 @@
+\subsection{Problems encountered}
+
+Initially, the content of the web page was not supposed to be stored in the contract since the hash is already stored, as it is sufficient to check the certified content. However, to allow the user to save the content that has been certified, I had to extract the content again but from the plugin. It turned out that the text was not encoded and formatted in the same way as I extracted it in my smart contract written in Go. This is a problem since the user can upload the downloaded content to verify its attestation: this content will then be hashed and must exactly match the hash that is on the blockchain. This issue could have been resolved but due to time constraints and because this issue was not related to the core of the project, I decided to simply store the content of the web page in the attestation. I still compare the two hashes when a content is verified despite having it in the contract.
+
+\paragraph{}
+Another problem comes from the way of how Chrome Extensions are designed. When the user looses focus, the pop-up closes, which led to two problems: when the user clicks on a web page section he wants to certify, the pop-up closes. I found a workaround that informs the user that the pop-up is going to close and that he simply needs to click on it again after having clicked on the desired page section. When reopened, in these cases, ALINE knows that the user is waiting for the attestation to be created and acts consequently: when the extension is opened, a background script checks if the selector has been stored in a \texttt{<div>} on the website made for this purpose. If it is found, the script informs the pop-up that the user reloaded the app to certify a section of the current web page and spawns the contract.
+The other situation where this automatic pop-up close was problematic was when the user wants to verify a content he had attested; at first, I wanted to have a field for the instance ID, and another one for the content. Since theses are typically values you copy and paste, when the user had to go back to its downloaded files to copy the second field, the pop-up would close automatically. The solution was simply to have one single field with both the instance ID of the attestation and the content, and parse it afterwards.
+
+\paragraph{}
+More generally, developing a Chrome extension was more complicated than expected. Indeed, for security reasons, the development environment is very restricted for such plugins. To provide another example, allowing the external module "Selector Gadget" to be called and executed from the plugin needed a few permissions and other options to be set in the correct way to the \texttt{manifest.json file}, which defines the permissions and the side-scripts used.
+
+
+\section{Potential improvements}
+Due to the problem described above, the content had to be saved on the skip chain along with its hash. What could be implemented in case it would be relevant to keep the certified content confidential would be to save it encrypted with a key only known from the user that would be randomly generated when the attestation is created.
+
+\paragraph{}
+At the moment, ALINE works using a local skipchain that I have to launch when I want to use the extension. A feature could allow the user to choose which remote blockchain or skipchain to use.
+
+\paragraph{}
+I also wish I had the time to add a historical of the attestations the user generated to have them on hand without needing to retrieve the files that may have been inadvertently deleted or lost. This historical would show the URLs and the ID of the attestation and would let the user download the content and its information whenever he needs it.
+
+\paragraph{}
+To be able to run, "Selector Gadget", that lets the user select a section of the page interactively, modifies the HTML code (it adds some HTML code to interact the page and temporarily save the CSS selector). But some web pages do not allow it for security reasons (I presume to avoid attacks such as cross-site scripting, injection attacks, and many others). Thus, for example, ALINE does not work on  Twitter, which I find regrettable. I wish I had time to find a way to fix this. The user can however still use ALINE for such pages by certifying the whole content since, in this case, "Selector Gadget" is not used.
+
+\paragraph{}
+Also, since the nodes much reach a consensus, the content must be the same everywhere, which excludes dynamic pages. Being able to attest their content, by either removing the dynamic elements if they are not relevant or my some other measure would be a useful improvement.
+
+\paragraph{}
+Finally, working on the portability of ALINE to be able to use it outside the Chrome environment could be interesting.
+
+\paragraph{}
+
+\section{Conclusion}
+
+This project, consisting of two parts, namely implementing the smart contract and the Chrome extension, has been completed in the required time. This project was very enriching because it was my first application using blockchains and smart contracts which I knew, but only in theory. Moreover, I had never coded in Go nor in Javascript before and to be able to implement the smart contract, I had to understand and familiarize with the cothority template provided, which was also a challenge. It was also my first plugin. Being a daily Chromium user, for me, it was a natural choice to code a Chrome extension, but now I would have thought it over and compared the available API with other browsers such as Firefox for example to make the best possible choice. Overall, I am satisfied with how this project turned out because in the end, even though some aspects could be improved, I ended up with a usable and working Chrome extension and with a practical and concrete experience of blockchains.
