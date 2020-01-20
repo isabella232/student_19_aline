@@ -1,3 +1,5 @@
+<a href="https://cla-assistant.io/dedis/student_19_aline"><img src="https://cla-assistant.io/readme/badge/dedis/student_19_aline" alt="CLA assistant" /></a>
+
 # student_19_aline
 
 This project consists of, first, writing a smart contract in Go that communicates with cothority and secondly, writing a plugin that uses this smart contract to allow internet users to certify some webpage content. The name of this plugin is
