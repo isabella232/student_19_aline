@@ -61,3 +61,17 @@ In your Chrome browser, go to `chrome://extensions/` and select “Load unpacked
 ### Use the plugin
 
 Once the previous step performed, you just have to click on the icon in the right up-corner of your screen while being on the webpage you want to certify.
+
+### Comparison with DecenArch
+
+https://github.com/dedis/student_18_decenar
+
+||DecenArch|ALINE|
+|----------|------------|-----------|
+| Purpose | Archive content | Attest content |
+| Decentralizad and collective witnessing | √ | √ |
+| Privacy preservation of the witnessing nodes | √ | x |
+| Selection of the content | Automatic | CSS query |
+| Usability | low (cli) | high (browser plugin) |
+| Censorship resistant | √ | √ |
+| Complexity | Polynomial with the number of nodes and the page size | linear (omniledger) |
